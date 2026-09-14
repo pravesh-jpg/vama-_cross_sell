@@ -1,0 +1,685 @@
+<title>VAMA Tag Flow</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --bg-elev:#FFFFFF;
+    --bg-sunk:#F6F8FB;
+    --border:#DCE3EC;
+    --border-soft:#E8EDF3;
+    --text:#16213A;
+    --text-dim:#3D5170;
+    --text-faint:#7B8CA6;
+    --accent:#1F4E8C;
+    --accent-2:#1F4E8C;
+    --accent-ink:#1B3A63;
+    --accent-soft:#EAF1FA;
+    --line:#DCE3EC;
+    --gradient:linear-gradient(120deg,#1F4E8C 0%,#3D7EC4 100%);
+
+    --tag-chadhava:#16213A;
+    --tag-puja:#16213A;
+    --tag-astro:#16213A;
+    --tag-ecome:#16213A;
+    --tag-chadhavaplus:#16213A;
+    --tag-kundli:#16213A;
+  }
+
+  *{box-sizing:border-box;}
+  html{color-scheme:light;}
+  body{
+    margin:0;
+    background:#FFFFFF;
+    color:var(--text);
+    font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    padding:0 16px 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .masthead{
+    height:4px;
+    background:var(--gradient);
+    margin:0 -16px 32px;
+  }
+  @media (min-width:1112px){ .masthead{ border-radius:0 0 6px 6px; } }
+  .num{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums;}
+
+  .wrap{max-width:1500px;margin:0 auto;}
+
+  header.page{margin-bottom:36px;}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12px;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--accent-ink);
+    background:var(--accent-soft);
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:4px;
+    margin-bottom:14px;
+  }
+  h1{
+    font-size:clamp(24px,3.4vw,34px);
+    line-height:1.18;
+    margin:0 0 22px;
+    font-weight:700;
+    letter-spacing:-.01em;
+    text-wrap:balance;
+    max-width:24ch;
+  }
+  .sub{
+    color:var(--text-dim);
+    font-size:15px;
+    max-width:64ch;
+    line-height:1.55;
+    margin:0 0 16px;
+  }
+  details.methodology{
+    background:var(--bg-elev);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:2px 16px;
+    font-size:13.5px;
+    color:var(--text-dim);
+  }
+  details.methodology summary{
+    cursor:pointer;
+    padding:12px 0;
+    font-weight:600;
+    color:var(--text);
+    list-style:none;
+  }
+  details.methodology summary::-webkit-details-marker{display:none;}
+  details.methodology summary::before{
+    content:"▸ ";
+    color:var(--accent);
+    font-family:"IBM Plex Mono",monospace;
+  }
+  details.methodology[open] summary::before{content:"▾ ";}
+  details.methodology .body{padding:0 0 16px;line-height:1.7;}
+  details.methodology .body p{margin:0 0 8px;}
+  details.methodology .body b{color:var(--text);font-weight:600;}
+  details.methodology .body code{
+    font-family:"IBM Plex Mono",monospace;
+    background:var(--bg-sunk);
+    padding:1px 5px;
+    border-radius:3px;
+    font-size:12.5px;
+  }
+
+  section{margin-top:40px;}
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .section-title{
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.07em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+  }
+  .section-note{font-size:13px;color:var(--text-faint);}
+
+  /* platform KPI row */
+  .kpi-row{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+    border-radius:12px 12px 0 0;
+    overflow:hidden;
+  }
+  .kpi{
+    background:var(--bg-elev);
+    padding:20px 28px;
+    min-width:0;
+  }
+  .kpi .label{font-size:12px;color:var(--text-dim);margin-bottom:8px;font-weight:500;}
+  .kpi .value{font-size:22px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .kpi.hero{
+    background:var(--bg-elev);
+    position:relative;
+  }
+  .kpi.hero .label{color:var(--text);}
+  .kpi.hero .value{color:var(--accent-ink);font-size:18px;white-space:normal;overflow:visible;text-overflow:clip;}
+  .kpi .value.row-toggle{cursor:pointer;}
+  .kpi .value.row-toggle .chev{font-size:14px;vertical-align:middle;}
+
+  .platform-users-detail{
+    background:var(--bg-sunk);
+    border:1px solid var(--border);
+    border-top:none;
+    padding:14px 28px 16px;
+  }
+  .platform-users-detail table.flow-table{min-width:620px;}
+
+  details.all-tags{
+    margin-top:1px;
+    background:var(--bg-elev);
+    border:1px solid var(--border);
+    border-top:none;
+    border-radius:0 0 12px 12px;
+  }
+  details.all-tags summary{
+    cursor:pointer;
+    padding:12px 28px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--text-dim);
+    list-style:none;
+    display:flex;
+    align-items:center;
+    gap:7px;
+  }
+  details.all-tags summary::-webkit-details-marker{display:none;}
+  details.all-tags summary .chev{
+    font-family:"IBM Plex Mono",monospace;
+    color:var(--accent);
+    transition:transform .15s ease;
+  }
+  details.all-tags[open] summary .chev{transform:rotate(90deg);}
+  details.all-tags .all-tags-body{
+    padding:2px 28px 16px;
+    border-top:1px solid var(--border-soft);
+    overflow-x:auto;
+  }
+  details.all-tags table.flow-table{min-width:620px;}
+  details.all-tags table.flow-table .dest{font-weight:600;}
+
+  /* tree connector */
+  .tree-stem{
+    width:1px;height:28px;
+    background:var(--line);
+    margin:0 auto;
+  }
+  .tree-bar-wrap{max-width:1080px;margin:0 auto;padding:0 2px;}
+  .tree-bar{height:1px;background:var(--line);position:relative;}
+
+  .tag-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-top:0;
+  }
+  .tag-card{
+    background:var(--bg-elev);
+    border:1px solid var(--border);
+    border-top:3px solid var(--tag-c);
+    border-radius:12px;
+    padding:18px 18px 8px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    box-shadow:0 14px 28px -20px color-mix(in srgb, var(--tag-c) 70%, transparent);
+  }
+  .tag-card::before{
+    content:"";
+    position:absolute;
+    top:-29px;left:50%;
+    width:1px;height:29px;
+    background:var(--line);
+  }
+  .tag-card .head{
+    display:flex;align-items:center;gap:8px;margin-bottom:14px;
+  }
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--tag-c);flex:none;}
+  .tag-card h3{margin:0;font-size:16.5px;font-weight:600;}
+  .tag-card .cohort-note{font-size:11.5px;color:var(--text-faint);margin-left:auto;font-weight:500;}
+
+  .hero-stat .value{font-size:27px;font-weight:700;letter-spacing:-.01em;color:var(--tag-c);}
+  .hero-stat .label{font-size:12px;color:var(--text-dim);margin-top:2px;}
+  .hero-stat{margin-bottom:14px;}
+
+  .mini-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 14px;
+    padding:12px 0;
+    border-top:1px solid var(--border-soft);
+    font-size:13px;
+  }
+  .mini-grid .mlabel{color:var(--text-faint);font-size:11px;text-transform:uppercase;letter-spacing:.04em;}
+  .mini-grid .mvalue{font-weight:600;font-size:14px;margin-top:1px;}
+
+  details.flow{
+    margin:6px -18px 0;
+    border-top:1px solid var(--border-soft);
+  }
+  details.flow summary{
+    cursor:pointer;
+    padding:11px 18px;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--accent-ink);
+    list-style:none;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  details.flow summary::-webkit-details-marker{display:none;}
+  details.flow summary .chev{
+    font-family:"IBM Plex Mono",monospace;
+    transition:transform .15s ease;
+    color:var(--accent);
+  }
+  details.flow[open] summary .chev{transform:rotate(90deg);}
+  details.flow .flow-body{padding:0 18px 16px;}
+
+  table.flow-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  table.flow-table thead tr{background:#E7EFF9;}
+  table.flow-table th{
+    text-align:left;
+    font-weight:600;
+    color:var(--text-dim);
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    padding:8px 10px;
+    border-bottom:1px solid var(--border-soft);
+  }
+  table.flow-table th.num-col, table.flow-table td.num-col{text-align:right;}
+  table.flow-table td{padding:7px 10px;border-bottom:1px solid var(--border-soft);vertical-align:middle;}
+  table.flow-table tbody tr:nth-child(even):not(.self-row){background:#F5F8FC;}
+  table.flow-table tr:last-child td{border-bottom:none;}
+  table.flow-table tr.self-row{background:#DCE9FA;}
+  table.flow-table tr.self-row td:first-child{border-radius:6px 0 0 6px;}
+  table.flow-table tr.self-row td:last-child{border-radius:0 6px 6px 0;}
+  table.flow-table .dest{display:flex;align-items:center;gap:6px;font-weight:500;}
+  table.flow-table .pct-bar{
+    height:4px;border-radius:2px;background:#F2F2F2;
+    overflow:hidden;margin-top:4px;width:64px;
+  }
+  table.flow-table .pct-bar > span{display:block;height:100%;background:var(--tag-c-row);}
+  table.flow-table .pct-num{font-size:11px;color:var(--text-faint);}
+
+  .row-toggle{
+    background:none;border:none;padding:0;margin:0;
+    display:flex;align-items:center;gap:7px;
+    font:inherit;font-weight:600;color:var(--text);
+    cursor:pointer;
+  }
+  .row-toggle.num-toggle{
+    justify-content:flex-end;width:100%;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-variant-numeric:tabular-nums;font-weight:500;
+  }
+  .row-toggle .chev{
+    font-family:"IBM Plex Mono",monospace;
+    color:var(--accent);font-size:11px;
+    transition:transform .15s ease;
+    flex:none;
+  }
+  .row-toggle.open .chev{transform:rotate(90deg);}
+  tr.detail-row td{padding:0;border-bottom:1px solid var(--border-soft);}
+  tr.detail-row .crosssell{
+    background:var(--bg-sunk);
+    padding:14px 18px 16px;
+    margin:0 -18px;
+    overflow-x:auto;
+  }
+  .crosssell-label{
+    font-size:11px;color:var(--text-faint);
+    text-transform:uppercase;letter-spacing:.04em;
+    margin-bottom:8px;font-weight:600;
+  }
+  tr.detail-row table.flow-table, .platform-users-detail table.flow-table{background:var(--bg-elev);border:1px solid var(--border-soft);border-radius:8px;padding:2px 14px;}
+  tr.detail-row table.flow-table th, .platform-users-detail table.flow-table th{padding-top:10px;}
+  tr.detail-row table.flow-table td, tr.detail-row table.flow-table th,
+  .platform-users-detail table.flow-table td, .platform-users-detail table.flow-table th{padding-left:14px;padding-right:14px;}
+
+  footer{
+    margin-top:48px;
+    padding-top:18px;
+    border-top:1px solid var(--border);
+    font-size:12px;
+    color:var(--text-faint);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+
+  @media (max-width:760px){
+    .kpi-row{grid-template-columns:repeat(2,1fr);}
+    .tag-grid{grid-template-columns:1fr;}
+    .tag-card::before{display:none;}
+  }
+  @media (min-width:761px) and (max-width:980px){
+    .tag-grid{grid-template-columns:repeat(2,1fr);}
+  }
+
+  .login-gate{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .login-gate[hidden]{display:none;}
+  .login-box{
+    width:100%;
+    max-width:340px;
+    background:var(--bg-elev);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:32px 28px 28px;
+    box-shadow:0 20px 40px -24px rgba(22,33,58,.18);
+  }
+  .login-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px;}
+  .login-sub{font-size:13px;color:var(--text-faint);margin-bottom:22px;}
+  .login-label{display:block;font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em;margin:14px 0 6px;}
+  .login-input{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    font-size:14px;
+    font-family:inherit;
+    color:var(--text);
+    background:#FFFFFF;
+  }
+  .login-input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .login-error{font-size:12.5px;color:#B3261E;margin-top:12px;}
+  .login-submit{
+    width:100%;
+    margin-top:22px;
+    padding:11px;
+    border:none;
+    border-radius:8px;
+    background:var(--accent-ink);
+    color:#FFFFFF;
+    font-size:14px;
+    font-weight:600;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .login-submit:hover{background:var(--accent);}
+</style>
+
+<div id="login-gate" class="login-gate">
+  <form class="login-box" id="login-form">
+    <div class="login-title">Vama Paying Users</div>
+    <div class="login-sub">Sign in to view this dashboard</div>
+    <label class="login-label" for="login-user">Username</label>
+    <input class="login-input" type="text" id="login-user" autocomplete="username" autofocus>
+    <label class="login-label" for="login-pass">Password</label>
+    <input class="login-input" type="password" id="login-pass" autocomplete="current-password">
+    <div class="login-error" id="login-error" hidden>Incorrect username or password</div>
+    <button class="login-submit" type="submit">Sign in</button>
+  </form>
+</div>
+
+<div id="main-content" hidden>
+<div class="masthead"></div>
+<div class="wrap">
+  <section style="margin-top:26px;">
+    <div class="section-head">
+      <span class="section-title">Vama Paying Users</span>
+    </div>
+    <div class="kpi-row" id="platform-kpis"></div>
+    <div class="platform-users-detail" id="platform-users-spread" hidden></div>
+
+    <details class="all-tags">
+      <summary><span class="chev">&#9656;</span> Break platform totals down by service</summary>
+      <div class="all-tags-body">
+        <table class="flow-table" id="all-tags-table">
+          <thead><tr>
+            <th>Service</th>
+            <th class="num-col">Cohort users</th>
+            <th class="num-col">Transactions</th>
+            <th class="num-col">Revenue</th>
+            <th class="num-col">AOV</th>
+            <th class="num-col">ARPU</th>
+          </tr></thead>
+          <tbody id="all-tags-rows"></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+</div>
+</div>
+
+<script>
+const DATA = {"platform": {"users": 685798, "txns": 1874163, "revenue": 896137810.34, "aov": 478.1536132876383, "arpu": 1306.7081127970628}, "tag_totals": {"Astro": {"txns": 536688, "revenue": 158700658.72, "users": 95445, "aov": 295.70375845929107, "arpu": 1662.7446039080098}, "Puja": {"txns": 332465, "revenue": 412441335.30999994, "users": 158086, "aov": 1240.5556534071254, "arpu": 2608.968126905608}, "Chadhava": {"txns": 443054, "revenue": 102821884.0, "users": 194299, "aov": 232.07528653392137, "arpu": 529.1940977565505}, "Chadhava+": {"txns": 336237, "revenue": 47305823.0, "users": 79691, "aov": 140.69190184304523, "arpu": 593.6156278626194}, "Ecome": {"txns": 225706, "revenue": 174862119.31, "users": 158184, "aov": 774.7340314834343, "arpu": 1105.4349321676023}, "Kundli": {"txns": 13, "revenue": 5990.0, "users": 4, "aov": 460.7692307692308, "arpu": 1497.5}}, "cohort_sizes": {"Chadhava": 194299, "Ecome": 158184, "Puja": 158086, "Astro": 95445, "Chadhava+": 79691, "Kundli": 4}, "matrix": {"Astro": {"Astro": {"users": 95445, "txns": 468065, "revenue": 133664539.30000001}, "Puja": {"users": 3425, "txns": 7056, "revenue": 13981326.8}, "Chadhava": {"users": 1969, "txns": 5553, "revenue": 1142917.0}, "Chadhava+": {"users": 479, "txns": 3116, "revenue": 314014.0}, "Ecome": {"users": 733, "txns": 923, "revenue": 703464.55}, "Kundli": {"users": 3, "txns": 5, "revenue": 1997.0}}, "Puja": {"Astro": {"users": 8607, "txns": 49335, "revenue": 19768425.68}, "Puja": {"users": 158086, "txns": 296232, "revenue": 364156315.91999996}, "Chadhava": {"users": 28485, "txns": 82591, "revenue": 27014769.0}, "Chadhava+": {"users": 5818, "txns": 54107, "revenue": 6240878.0}, "Ecome": {"users": 12769, "txns": 17691, "revenue": 14277270.219999999}, "Kundli": {"users": 2, "txns": 3, "revenue": 1498.0}}, "Chadhava": {"Astro": {"users": 4290, "txns": 14097, "revenue": 3381397.08}, "Puja": {"users": 11406, "txns": 21854, "revenue": 25087148.96}, "Chadhava": {"users": 194299, "txns": 337023, "revenue": 70212549.0}, "Chadhava+": {"users": 11351, "txns": 62372, "revenue": 7613160.0}, "Ecome": {"users": 8295, "txns": 10553, "revenue": 7797059.82}, "Kundli": {"users": 1, "txns": 1, "revenue": 499.0}}, "Chadhava+": {"Astro": {"users": 639, "txns": 1834, "revenue": 301544.38}, "Puja": {"users": 932, "txns": 1629, "revenue": 1764094.0}, "Chadhava": {"users": 4458, "txns": 8220, "revenue": 1757989.0}, "Chadhava+": {"users": 79691, "txns": 208012, "revenue": 31915997.0}, "Ecome": {"users": 2079, "txns": 2603, "revenue": 2015094.09}, "Kundli": {"users": 0, "txns": 0, "revenue": 0.0}}, "Ecome": {"Astro": {"users": 783, "txns": 1674, "revenue": 321400.22}, "Puja": {"users": 2446, "txns": 4717, "revenue": 5947179.05}, "Chadhava": {"users": 4924, "txns": 9645, "revenue": 2688290.0}, "Chadhava+": {"users": 2023, "txns": 7239, "revenue": 1013788.0}, "Ecome": {"users": 158184, "txns": 186760, "revenue": 144354081.14}, "Kundli": {"users": 0, "txns": 0, "revenue": 0.0}}, "Kundli": {"Astro": {"users": 0, "txns": 0, "revenue": 0.0}, "Puja": {"users": 0, "txns": 0, "revenue": 0.0}, "Chadhava": {"users": 0, "txns": 0, "revenue": 0.0}, "Chadhava+": {"users": 0, "txns": 0, "revenue": 0.0}, "Ecome": {"users": 0, "txns": 0, "revenue": 0.0}, "Kundli": {"users": 4, "txns": 4, "revenue": 1996.0}}}, "meta": {"rowsRaw": 1874163, "rowsAfterStatus": 1768631, "rowsFinal": 1759010, "rowsExcludedMobile": 9621, "dateMin": "01 Jan 2023", "dateMax": "31 Aug 2026", "revenueIncludesBlankMobile": true}, "order": ["Astro", "Puja", "Chadhava", "Chadhava+", "Ecome", "Kundli"], "platform_txn_spread": {"1": {"users": 439285, "txns": 439285, "revenue": 243277262.23, "aov": 553.8, "arpu": 553.8}, "2": {"users": 117413, "txns": 234826, "revenue": 114425428.47, "aov": 487.28, "arpu": 974.56}, "3": {"users": 47087, "txns": 141261, "revenue": 70174627.31, "aov": 496.77, "arpu": 1490.32}, "4": {"users": 22866, "txns": 91464, "revenue": 45942273.93, "aov": 502.3, "arpu": 2009.2}, "5+": {"users": 59058, "txns": 956078, "revenue": 413621090.27, "aov": 432.62, "arpu": 7003.64}}, "exclusive": {"Chadhava": {"users": 164355, "txns": 244176, "revenue": 48588284.0}, "Ecome": {"users": 149687, "txns": 174402, "revenue": 135363798.39}, "Puja": {"users": 114557, "txns": 162709, "revenue": 195484893.92}, "Astro": {"users": 89980, "txns": 303870, "revenue": 68818187.7}, "Chadhava+": {"users": 72897, "txns": 169047, "revenue": 26208270.0}, "Kundli": {"users": 4, "txns": 4, "revenue": 1996.0}}, "txn_spread_full": {"Chadhava": {"Chadhava": {"1": {"users": 141713, "txns": 141713, "revenue": 31850424.0, "aov": 224.75, "arpu": 224.75}, "2": {"users": 28239, "txns": 56478, "revenue": 12144887.0, "aov": 215.04, "arpu": 430.07}, "3": {"users": 10303, "txns": 30909, "revenue": 6364337.0, "aov": 205.91, "arpu": 617.72}, "4": {"users": 4931, "txns": 19724, "revenue": 3983753.0, "aov": 201.97, "arpu": 807.9}, "5+": {"users": 9113, "txns": 88199, "revenue": 15869148.0, "aov": 179.92, "arpu": 1741.37}}, "Ecome": {"1": {"users": 6741, "txns": 6741, "revenue": 4816531.49, "aov": 714.51, "arpu": 714.51}, "2": {"users": 1131, "txns": 2262, "revenue": 1738443.5, "aov": 768.54, "arpu": 1537.09}, "3": {"users": 279, "txns": 837, "revenue": 640295.27, "aov": 764.99, "arpu": 2294.97}, "4": {"users": 90, "txns": 360, "revenue": 307118.82, "aov": 853.11, "arpu": 3412.43}, "5+": {"users": 54, "txns": 353, "revenue": 294670.74, "aov": 834.76, "arpu": 5456.87}}, "Puja": {"1": {"users": 7505, "txns": 7505, "revenue": 8181605.0, "aov": 1090.15, "arpu": 1090.15}, "2": {"users": 1915, "txns": 3830, "revenue": 4446228.0, "aov": 1160.9, "arpu": 2321.79}, "3": {"users": 783, "txns": 2349, "revenue": 2783216.95, "aov": 1184.85, "arpu": 3554.56}, "4": {"users": 436, "txns": 1744, "revenue": 2063630.0, "aov": 1183.27, "arpu": 4733.1}, "5+": {"users": 767, "txns": 6426, "revenue": 7612469.01, "aov": 1184.64, "arpu": 9924.99}}, "Astro": {"1": {"users": 2552, "txns": 2552, "revenue": 368972.74, "aov": 144.58, "arpu": 144.58}, "2": {"users": 823, "txns": 1646, "revenue": 271899.12, "aov": 165.19, "arpu": 330.38}, "3": {"users": 326, "txns": 978, "revenue": 182314.08, "aov": 186.42, "arpu": 559.25}, "4": {"users": 164, "txns": 656, "revenue": 133282.58, "aov": 203.17, "arpu": 812.7}, "5+": {"users": 425, "txns": 8265, "revenue": 2424928.56, "aov": 293.4, "arpu": 5705.71}}, "Chadhava+": {"1": {"users": 3269, "txns": 3269, "revenue": 145601.0, "aov": 44.54, "arpu": 44.54}, "2": {"users": 3024, "txns": 6048, "revenue": 1115665.0, "aov": 184.47, "arpu": 368.94}, "3": {"users": 1150, "txns": 3450, "revenue": 633783.0, "aov": 183.71, "arpu": 551.12}, "4": {"users": 701, "txns": 2804, "revenue": 437140.0, "aov": 155.9, "arpu": 623.59}, "5+": {"users": 3207, "txns": 46801, "revenue": 5280971.0, "aov": 112.84, "arpu": 1646.7}}, "Kundli": {"1": {"users": 1, "txns": 1, "revenue": 499.0, "aov": 499.0, "arpu": 499.0}, "2": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "3": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "4": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "5+": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}}}, "Ecome": {"Chadhava": {"1": {"users": 3342, "txns": 3342, "revenue": 995207.0, "aov": 297.79, "arpu": 297.79}, "2": {"users": 804, "txns": 1608, "revenue": 462784.0, "aov": 287.8, "arpu": 575.6}, "3": {"users": 306, "txns": 918, "revenue": 249459.0, "aov": 271.74, "arpu": 815.23}, "4": {"users": 168, "txns": 672, "revenue": 172381.0, "aov": 256.52, "arpu": 1026.08}, "5+": {"users": 304, "txns": 3105, "revenue": 808459.0, "aov": 260.37, "arpu": 2659.4}}, "Ecome": {"1": {"users": 137856, "txns": 137856, "revenue": 104101775.88, "aov": 755.15, "arpu": 755.15}, "2": {"users": 15277, "txns": 30554, "revenue": 24733516.21, "aov": 809.5, "arpu": 1619.0}, "3": {"users": 3353, "txns": 10059, "revenue": 8408336.16, "aov": 835.9, "arpu": 2507.71}, "4": {"users": 1000, "txns": 4000, "revenue": 3395129.25, "aov": 848.78, "arpu": 3395.13}, "5+": {"users": 698, "txns": 4291, "revenue": 3715323.64, "aov": 865.84, "arpu": 5322.81}}, "Puja": {"1": {"users": 1633, "txns": 1633, "revenue": 2015006.05, "aov": 1233.93, "arpu": 1233.93}, "2": {"users": 393, "txns": 786, "revenue": 986429.0, "aov": 1255.0, "arpu": 2510.0}, "3": {"users": 179, "txns": 537, "revenue": 693595.0, "aov": 1291.61, "arpu": 3874.83}, "4": {"users": 93, "txns": 372, "revenue": 463767.0, "aov": 1246.69, "arpu": 4986.74}, "5+": {"users": 148, "txns": 1389, "revenue": 1788382.0, "aov": 1287.53, "arpu": 12083.66}}, "Astro": {"1": {"users": 492, "txns": 492, "revenue": 69951.56, "aov": 142.18, "arpu": 142.18}, "2": {"users": 147, "txns": 294, "revenue": 47438.52, "aov": 161.36, "arpu": 322.71}, "3": {"users": 70, "txns": 210, "revenue": 43750.3, "aov": 208.33, "arpu": 625.0}, "4": {"users": 14, "txns": 56, "revenue": 10228.42, "aov": 182.65, "arpu": 730.6}, "5+": {"users": 60, "txns": 622, "revenue": 150031.42, "aov": 241.21, "arpu": 2500.52}}, "Chadhava+": {"1": {"users": 730, "txns": 730, "revenue": 19197.0, "aov": 26.3, "arpu": 26.3}, "2": {"users": 729, "txns": 1458, "revenue": 300386.0, "aov": 206.03, "arpu": 412.05}, "3": {"users": 215, "txns": 645, "revenue": 145580.0, "aov": 225.71, "arpu": 677.12}, "4": {"users": 92, "txns": 368, "revenue": 68590.0, "aov": 186.39, "arpu": 745.54}, "5+": {"users": 257, "txns": 4038, "revenue": 480035.0, "aov": 118.88, "arpu": 1867.84}}, "Kundli": {"1": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "2": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "3": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "4": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "5+": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}}}, "Puja": {"Chadhava": {"1": {"users": 15318, "txns": 15318, "revenue": 5732394.0, "aov": 374.23, "arpu": 374.23}, "2": {"users": 5503, "txns": 11006, "revenue": 3964823.0, "aov": 360.24, "arpu": 720.48}, "3": {"users": 2592, "txns": 7776, "revenue": 2697672.0, "aov": 346.92, "arpu": 1040.77}, "4": {"users": 1452, "txns": 5808, "revenue": 1995671.0, "aov": 343.61, "arpu": 1374.43}, "5+": {"users": 3620, "txns": 42683, "revenue": 12624209.0, "aov": 295.77, "arpu": 3487.35}}, "Ecome": {"1": {"users": 9656, "txns": 9656, "revenue": 7596578.48, "aov": 786.72, "arpu": 786.72}, "2": {"users": 2108, "txns": 4216, "revenue": 3429697.31, "aov": 813.5, "arpu": 1626.99}, "3": {"users": 593, "txns": 1779, "revenue": 1504629.95, "aov": 845.77, "arpu": 2537.32}, "4": {"users": 226, "txns": 904, "revenue": 758595.53, "aov": 839.15, "arpu": 3356.62}, "5+": {"users": 186, "txns": 1136, "revenue": 987768.95, "aov": 869.51, "arpu": 5310.59}}, "Puja": {"1": {"users": 111788, "txns": 111788, "revenue": 131552604.77, "aov": 1176.8, "arpu": 1176.8}, "2": {"users": 23211, "txns": 46422, "revenue": 56065162.17, "aov": 1207.73, "arpu": 2415.46}, "3": {"users": 9045, "txns": 27135, "revenue": 33488508.75, "aov": 1234.14, "arpu": 3702.43}, "4": {"users": 4510, "txns": 18040, "revenue": 22327988.02, "aov": 1237.69, "arpu": 4950.77}, "5+": {"users": 9532, "txns": 92847, "revenue": 120722052.21, "aov": 1300.23, "arpu": 12664.92}}, "Astro": {"1": {"users": 4383, "txns": 4383, "revenue": 1333211.1, "aov": 304.18, "arpu": 304.18}, "2": {"users": 1614, "txns": 3228, "revenue": 876673.2, "aov": 271.58, "arpu": 543.17}, "3": {"users": 814, "txns": 2442, "revenue": 666234.86, "aov": 272.82, "arpu": 818.47}, "4": {"users": 451, "txns": 1804, "revenue": 478810.02, "aov": 265.42, "arpu": 1061.66}, "5+": {"users": 1345, "txns": 37478, "revenue": 16413496.5, "aov": 437.95, "arpu": 12203.34}}, "Chadhava+": {"1": {"users": 1087, "txns": 1087, "revenue": 72338.0, "aov": 66.55, "arpu": 66.55}, "2": {"users": 1289, "txns": 2578, "revenue": 484925.0, "aov": 188.1, "arpu": 376.2}, "3": {"users": 625, "txns": 1875, "revenue": 374482.0, "aov": 199.72, "arpu": 599.17}, "4": {"users": 370, "txns": 1480, "revenue": 225577.0, "aov": 152.42, "arpu": 609.67}, "5+": {"users": 2447, "txns": 47087, "revenue": 5083556.0, "aov": 107.96, "arpu": 2077.46}}, "Kundli": {"1": {"users": 1, "txns": 1, "revenue": 499.0, "aov": 499.0, "arpu": 499.0}, "2": {"users": 1, "txns": 2, "revenue": 999.0, "aov": 499.5, "arpu": 999.0}, "3": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "4": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "5+": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}}}, "Astro": {"Chadhava": {"1": {"users": 1241, "txns": 1241, "revenue": 302835.0, "aov": 244.02, "arpu": 244.02}, "2": {"users": 339, "txns": 678, "revenue": 162113.0, "aov": 239.1, "arpu": 478.21}, "3": {"users": 129, "txns": 387, "revenue": 75278.0, "aov": 194.52, "arpu": 583.55}, "4": {"users": 75, "txns": 300, "revenue": 61684.0, "aov": 205.61, "arpu": 822.45}, "5+": {"users": 185, "txns": 2947, "revenue": 541007.0, "aov": 183.58, "arpu": 2924.36}}, "Ecome": {"1": {"users": 606, "txns": 606, "revenue": 439834.61, "aov": 725.8, "arpu": 725.8}, "2": {"users": 88, "txns": 176, "revenue": 140177.87, "aov": 796.47, "arpu": 1592.93}, "3": {"users": 24, "txns": 72, "revenue": 62847.15, "aov": 872.88, "arpu": 2618.63}, "4": {"users": 9, "txns": 36, "revenue": 34461.9, "aov": 957.28, "arpu": 3829.1}, "5+": {"users": 6, "txns": 33, "revenue": 26143.02, "aov": 792.21, "arpu": 4357.17}}, "Puja": {"1": {"users": 2294, "txns": 2294, "revenue": 3993455.64, "aov": 1740.83, "arpu": 1740.83}, "2": {"users": 571, "txns": 1142, "revenue": 1872676.24, "aov": 1639.82, "arpu": 3279.64}, "3": {"users": 231, "txns": 693, "revenue": 1484089.87, "aov": 2141.54, "arpu": 6424.63}, "4": {"users": 117, "txns": 468, "revenue": 1056767.87, "aov": 2258.05, "arpu": 9032.2}, "5+": {"users": 212, "txns": 2459, "revenue": 5574337.18, "aov": 2266.91, "arpu": 26294.04}}, "Astro": {"1": {"users": 58359, "txns": 58359, "revenue": 8142098.76, "aov": 139.52, "arpu": 139.52}, "2": {"users": 18010, "txns": 36020, "revenue": 5655237.2, "aov": 157.0, "arpu": 314.01}, "3": {"users": 6576, "txns": 19728, "revenue": 3432120.96, "aov": 173.97, "arpu": 521.92}, "4": {"users": 3227, "txns": 12908, "revenue": 2370676.34, "aov": 183.66, "arpu": 734.64}, "5+": {"users": 9273, "txns": 341050, "revenue": 114064406.04, "aov": 334.45, "arpu": 12300.7}}, "Chadhava+": {"1": {"users": 189, "txns": 189, "revenue": 7728.0, "aov": 40.89, "arpu": 40.89}, "2": {"users": 99, "txns": 198, "revenue": 34591.0, "aov": 174.7, "arpu": 349.4}, "3": {"users": 39, "txns": 117, "revenue": 20994.0, "aov": 179.44, "arpu": 538.31}, "4": {"users": 24, "txns": 96, "revenue": 12181.0, "aov": 126.89, "arpu": 507.54}, "5+": {"users": 128, "txns": 2516, "revenue": 238520.0, "aov": 94.8, "arpu": 1863.44}}, "Kundli": {"1": {"users": 1, "txns": 1, "revenue": 1.0, "aov": 1.0, "arpu": 1.0}, "2": {"users": 2, "txns": 4, "revenue": 1996.0, "aov": 499.0, "arpu": 998.0}, "3": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "4": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "5+": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}}}, "Chadhava+": {"Chadhava": {"1": {"users": 2946, "txns": 2946, "revenue": 629621.0, "aov": 213.72, "arpu": 213.72}, "2": {"users": 791, "txns": 1582, "revenue": 342211.0, "aov": 216.32, "arpu": 432.63}, "3": {"users": 292, "txns": 876, "revenue": 203891.0, "aov": 232.75, "arpu": 698.26}, "4": {"users": 155, "txns": 620, "revenue": 123297.0, "aov": 198.87, "arpu": 795.46}, "5+": {"users": 274, "txns": 2196, "revenue": 458969.0, "aov": 209.0, "arpu": 1675.07}}, "Ecome": {"1": {"users": 1706, "txns": 1706, "revenue": 1301940.94, "aov": 763.15, "arpu": 763.15}, "2": {"users": 280, "txns": 560, "revenue": 447531.88, "aov": 799.16, "arpu": 1598.33}, "3": {"users": 62, "txns": 186, "revenue": 148917.57, "aov": 800.63, "arpu": 2401.9}, "4": {"users": 15, "txns": 60, "revenue": 46054.3, "aov": 767.57, "arpu": 3070.29}, "5+": {"users": 16, "txns": 91, "revenue": 70649.4, "aov": 776.37, "arpu": 4415.59}}, "Puja": {"1": {"users": 631, "txns": 631, "revenue": 668445.0, "aov": 1059.34, "arpu": 1059.34}, "2": {"users": 162, "txns": 324, "revenue": 348824.0, "aov": 1076.62, "arpu": 2153.23}, "3": {"users": 59, "txns": 177, "revenue": 196100.0, "aov": 1107.91, "arpu": 3323.73}, "4": {"users": 32, "txns": 128, "revenue": 145717.0, "aov": 1138.41, "arpu": 4553.66}, "5+": {"users": 48, "txns": 369, "revenue": 405008.0, "aov": 1097.58, "arpu": 8437.67}}, "Astro": {"1": {"users": 454, "txns": 454, "revenue": 59940.82, "aov": 132.03, "arpu": 132.03}, "2": {"users": 97, "txns": 194, "revenue": 30851.94, "aov": 159.03, "arpu": 318.06}, "3": {"users": 37, "txns": 111, "revenue": 20389.76, "aov": 183.69, "arpu": 551.07}, "4": {"users": 19, "txns": 76, "revenue": 13415.96, "aov": 176.53, "arpu": 706.1}, "5+": {"users": 32, "txns": 999, "revenue": 176945.9, "aov": 177.12, "arpu": 5529.56}}, "Chadhava+": {"1": {"users": 34997, "txns": 34997, "revenue": 629802.0, "aov": 18.0, "arpu": 18.0}, "2": {"users": 24847, "txns": 49694, "revenue": 10016328.0, "aov": 201.56, "arpu": 403.12}, "3": {"users": 8760, "txns": 26280, "revenue": 6575481.0, "aov": 250.21, "arpu": 750.63}, "4": {"users": 2922, "txns": 11688, "revenue": 2341040.0, "aov": 200.29, "arpu": 801.18}, "5+": {"users": 8165, "txns": 85353, "revenue": 12353346.0, "aov": 144.73, "arpu": 1512.96}}, "Kundli": {"1": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "2": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "3": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "4": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "5+": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}}}, "Kundli": {"Chadhava": {"1": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "2": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "3": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "4": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "5+": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}}, "Ecome": {"1": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "2": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "3": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "4": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "5+": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}}, "Puja": {"1": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "2": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "3": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "4": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "5+": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}}, "Astro": {"1": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "2": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "3": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "4": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "5+": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}}, "Chadhava+": {"1": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "2": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "3": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "4": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "5+": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}}, "Kundli": {"1": {"users": 4, "txns": 4, "revenue": 1996.0, "aov": 499.0, "arpu": 499.0}, "2": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "3": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "4": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}, "5+": {"users": 0, "txns": 0, "revenue": 0.0, "aov": 0, "arpu": 0}}}}};
+
+const TAG_KEY = {
+  "Chadhava":"chadhava", "Puja":"puja", "Astro":"astro",
+  "Ecome":"ecome", "Chadhava+":"chadhavaplus", "Kundli":"kundli"
+};
+
+function fmtNum(n){ return Math.round(n).toLocaleString('en-IN'); }
+function fmtINR(n){ return '₹' + Math.round(n).toLocaleString('en-IN'); }
+function fmtPct(n){ return n.toFixed(1) + '%'; }
+
+function kpiTile(label, value, hero){
+  const el = document.createElement('div');
+  el.className = 'kpi' + (hero ? ' hero' : '');
+  el.innerHTML = `<div class="label">${label}</div><div class="value num">${value}</div>`;
+  return el;
+}
+
+function platformUsersSpreadTable(){
+  const spread = DATA.platform_txn_spread;
+  const buckets = ["1","2","3","4","5+"];
+  const totalUsers = buckets.reduce((s,b) => s + spread[b].users, 0);
+  let rows = '';
+  buckets.forEach(b => {
+    const c = spread[b];
+    const pct = totalUsers ? (c.users / totalUsers * 100) : 0;
+    rows += `<tr>
+      <td><div class="dest">Tx Count ${b}</div></td>
+      <td class="num-col num">${fmtNum(c.users)}</td>
+      <td class="num-col num pct-num">${fmtPct(pct)}</td>
+      <td class="num-col num">${fmtNum(c.txns)}</td>
+      <td class="num-col num">${fmtINR(c.revenue)}</td>
+      <td class="num-col num">${fmtINR(c.aov)}</td>
+      <td class="num-col num">${fmtINR(c.arpu)}</td>
+    </tr>`;
+  });
+
+  return `<table class="flow-table">
+    <thead><tr>
+      <th>Tx Count</th>
+      <th class="num-col">Users</th>
+      <th class="num-col">% of users</th>
+      <th class="num-col">Transactions</th>
+      <th class="num-col">Revenue</th>
+      <th class="num-col">AOV</th>
+      <th class="num-col">ARPU</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function buildPlatform(){
+  const p = DATA.platform;
+  const row = document.getElementById('platform-kpis');
+  const usersTile = kpiTile('Unique paid users', '');
+  const valueEl = usersTile.querySelector('.value');
+  valueEl.classList.add('row-toggle');
+  valueEl.innerHTML = `${fmtNum(p.users)} <span class="chev">&#9656;</span>`;
+  valueEl.addEventListener('click', () => {
+    const detail = document.getElementById('platform-users-spread');
+    const isOpen = !detail.hidden;
+    if (!isOpen && !detail.innerHTML){
+      detail.innerHTML = platformUsersSpreadTable();
+    }
+    detail.hidden = isOpen;
+    valueEl.classList.toggle('open', !isOpen);
+  });
+  row.appendChild(usersTile);
+  row.appendChild(kpiTile('Transactions', fmtNum(p.txns)));
+  row.appendChild(kpiTile('Revenue', fmtINR(p.revenue), true));
+  row.appendChild(kpiTile('AOV', fmtINR(p.aov)));
+  row.appendChild(kpiTile('ARPU', fmtINR(p.arpu)));
+}
+
+function spreadSubTable(sourceTag, destTag, cellUsers){
+  const spread = DATA.txn_spread_full[sourceTag][destTag];
+  const buckets = ["1","2","3","4","5+"];
+  let spreadRows = '';
+  buckets.forEach(b => {
+    const c = spread[b];
+    const pct = cellUsers ? (c.users / cellUsers * 100) : 0;
+    spreadRows += `<tr>
+      <td><div class="dest">Tx Count ${b}</div></td>
+      <td class="num-col num">${fmtNum(c.users)}</td>
+      <td class="num-col num pct-num">${fmtPct(pct)}</td>
+      <td class="num-col num">${fmtNum(c.txns)}</td>
+      <td class="num-col num">${fmtINR(c.revenue)}</td>
+      <td class="num-col num">${fmtINR(c.aov)}</td>
+      <td class="num-col num">${fmtINR(c.arpu)}</td>
+    </tr>`;
+  });
+
+  return `<table class="flow-table">
+    <thead><tr>
+      <th>Tx Count</th>
+      <th class="num-col">Users</th>
+      <th class="num-col">% of these users</th>
+      <th class="num-col">Transactions</th>
+      <th class="num-col">Revenue</th>
+      <th class="num-col">AOV</th>
+      <th class="num-col">ARPU</th>
+    </tr></thead>
+    <tbody>${spreadRows}</tbody>
+  </table>`;
+}
+
+function crossSellTable(sourceTag){
+  const cohortSize = DATA.cohort_sizes[sourceTag];
+  const row = DATA.matrix[sourceTag];
+  const srcKey = TAG_KEY[sourceTag];
+  const dests = DATA.order.slice();
+
+  let rows = '';
+  dests.forEach(d => {
+    const isSelf = d === sourceTag;
+    const cell = isSelf ? DATA.exclusive[sourceTag] : row[d];
+    const pct = cohortSize ? (cell.users / cohortSize * 100) : 0;
+    const destKey = TAG_KEY[d];
+    rows += `<tr class="${isSelf ? 'self-row' : ''}">
+      <td>
+        <button class="row-toggle" data-src="${sourceTag}" data-dest="${d}">
+          <span class="chev">&#9656;</span> ${d}${isSelf ? ' <span class="pct-num">(stayed, never crossed)</span>' : ''}
+        </button>
+      </td>
+      <td class="num-col num">${fmtNum(cell.users)}</td>
+      <td class="num-col num pct-num">${fmtPct(pct)}</td>
+      <td class="num-col num">${fmtNum(cell.txns)}</td>
+      <td class="num-col num">${fmtINR(cell.revenue)}</td>
+      <td class="num-col num">${fmtINR(cell.txns ? cell.revenue/cell.txns : 0)}</td>
+      <td class="num-col num">${fmtINR(cell.users ? cell.revenue/cell.users : 0)}</td>
+    </tr>
+    <tr class="detail-row spread-row" id="spread-${srcKey}-${destKey}" hidden>
+      <td colspan="7"><div class="crosssell">${spreadSubTable(sourceTag, d, cell.users)}</div></td>
+    </tr>`;
+  });
+
+  return `<table class="flow-table">
+    <thead><tr>
+      <th>Service</th>
+      <th class="num-col">Users</th>
+      <th class="num-col">% of cohort</th>
+      <th class="num-col">Transactions</th>
+      <th class="num-col">Revenue</th>
+      <th class="num-col">AOV</th>
+      <th class="num-col">ARPU</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function buildAllTagsTable(){
+  const body = document.getElementById('all-tags-rows');
+  let rows = '';
+  DATA.order.forEach(tag => {
+    const key = TAG_KEY[tag];
+    const cohort = DATA.cohort_sizes[tag];
+    const tot = DATA.tag_totals[tag];
+    rows += `<tr>
+      <td>
+        <button class="row-toggle" data-tag="${tag}">
+          <span class="chev">&#9656;</span> ${tag}
+        </button>
+      </td>
+      <td class="num-col num">
+        <button class="row-toggle num-toggle" data-platform-tag="${tag}">
+          ${fmtNum(cohort)} <span class="chev">&#9656;</span>
+        </button>
+      </td>
+      <td class="num-col num">${fmtNum(tot.txns)}</td>
+      <td class="num-col num">${fmtINR(tot.revenue)}</td>
+      <td class="num-col num">${fmtINR(tot.aov)}</td>
+      <td class="num-col num">${fmtINR(tot.arpu)}</td>
+    </tr>
+    <tr class="detail-row" id="platform-spread-${key}" hidden>
+      <td colspan="6"><div class="crosssell">${spreadSubTable(tag, tag, cohort)}</div></td>
+    </tr>
+    <tr class="detail-row" id="detail-${key}" hidden>
+      <td colspan="6"><div class="crosssell">${crossSellTable(tag)}</div></td>
+    </tr>`;
+  });
+  body.innerHTML = rows;
+
+  body.querySelectorAll('.row-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      let detail;
+      if (btn.dataset.platformTag){
+        detail = document.getElementById('platform-spread-' + TAG_KEY[btn.dataset.platformTag]);
+      } else if (btn.dataset.tag){
+        detail = document.getElementById('detail-' + TAG_KEY[btn.dataset.tag]);
+      } else {
+        detail = document.getElementById('spread-' + TAG_KEY[btn.dataset.src] + '-' + TAG_KEY[btn.dataset.dest]);
+      }
+      const isOpen = !detail.hidden;
+      detail.hidden = isOpen;
+      btn.classList.toggle('open', !isOpen);
+    });
+  });
+}
+
+buildPlatform();
+buildAllTagsTable();
+
+(function(){
+  const VALID_USER = 'Vama';
+  const VALID_PASS = 'Vama123@';
+  const gate = document.getElementById('login-gate');
+  const content = document.getElementById('main-content');
+  const form = document.getElementById('login-form');
+  const errorEl = document.getElementById('login-error');
+
+  function unlock(){
+    gate.hidden = true;
+    content.hidden = false;
+  }
+
+  let alreadyIn = false;
+  try{ alreadyIn = sessionStorage.getItem('vama-dash-auth') === '1'; }catch(e){}
+  if (alreadyIn){
+    unlock();
+  } else {
+    gate.hidden = false;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const u = document.getElementById('login-user').value.trim();
+    const p = document.getElementById('login-pass').value;
+    if (u === VALID_USER && p === VALID_PASS){
+      try{ sessionStorage.setItem('vama-dash-auth', '1'); }catch(e){}
+      errorEl.hidden = true;
+      unlock();
+    } else {
+      errorEl.hidden = false;
+    }
+  });
+})();
+</script>
