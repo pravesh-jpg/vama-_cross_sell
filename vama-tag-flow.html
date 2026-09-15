@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root{ color-scheme: light; }
+  body{ margin:0; font:14px system-ui, sans-serif; }
+  img{ max-width:100%; }
+  [hidden]{ display:none !important; }
+</style>
+<title>VAMA Paying Users</title>
+<style>
+  :root{
+    --bg: #f5f1ef;
+    --surface: #ffffff;
+    --surface-2: #faf6f3;
+    --border: #e6ddd6;
+    --text-primary: #211c1a;
+    --text-secondary: #6f665d;
+    --text-muted: #9a9088;
+    --accent: #7d2438;
+    --accent-soft: #f5e4e8;
+    --accent-soft-border: #e7c6cd;
+
+
+    --shadow-1: 0 1px 2px rgba(33,28,26,0.05), 0 1px 1px rgba(33,28,26,0.04);
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #1b1714;
+      --surface: #241f1b;
+      --surface-2: #292420;
+      --border: #3a332c;
+      --text-primary: #f3ece5;
+      --text-secondary: #bcb0a3;
+      --text-muted: #8a8074;
+      --accent: #e58ea0;
+      --accent-soft: #35222a;
+      --accent-soft-border: #4c2e37;
+
+
+      --shadow-1: 0 1px 2px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #1b1714;
+    --surface: #241f1b;
+    --surface-2: #292420;
+    --border: #3a332c;
+    --text-primary: #f3ece5;
+    --text-secondary: #bcb0a3;
+    --text-muted: #8a8074;
+    --accent: #e58ea0;
+    --accent-soft: #35222a;
+    --accent-soft-border: #4c2e37;
+
+
+    --shadow-1: 0 1px 2px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  body{
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding-inline: 16px;
+    padding-block: 28px 48px;
+    display: flex;
+    justify-content: center;
+  }
+  .page{
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .header{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  h1{
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-optical-sizing: auto;
+    font-weight: 560;
+    font-size: clamp(28px, 4vw, 40px);
+    line-height: 1.08;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .period{
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tiles{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+  .tile{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 16px;
+    box-shadow: var(--shadow-1);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+  .tile.is-accent{
+    background: var(--accent-soft);
+    border-color: var(--accent-soft-border);
+  }
+  .tile-label{
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .tile-value{
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 540;
+    font-size: clamp(19px, 2.6vw, 25px);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tile-value.is-long{
+    font-size: clamp(16px, 2vw, 20px);
+  }
+
+  .section{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  h2{
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 540;
+    font-size: 20px;
+    margin: 0;
+  }
+
+  .table-wrap{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow-1);
+    overflow-x: auto;
+  }
+  table{
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+  }
+  thead th{
+    text-align: right;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  thead th:first-child, tbody td:first-child{ text-align: left; }
+  tbody td{
+    padding: 12px 16px;
+    text-align: right;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody tr:last-child td{ border-bottom: none; }
+  tbody tr.total-row td{
+    font-weight: 650;
+    color: var(--text-primary);
+    background: var(--surface-2);
+    border-top: 1px solid var(--border);
+  }
+  .bu-cell{ font-weight: 600; }
+  .expander{
+    font: inherit;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    border-radius: 6px;
+  }
+  .expander:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+  .chev{
+    width: 0; height: 0;
+    border-left: 5px solid currentColor;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    color: var(--text-muted);
+    transition: transform .15s ease;
+    flex: none;
+  }
+  .expander[aria-expanded="true"] .chev{ transform: rotate(90deg); }
+  @media (prefers-reduced-motion: reduce){ .chev{ transition: none; } }
+
+  .detail-row > td{
+    padding: 0 16px 14px 34px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+  table.sub{
+    width: 100%;
+    min-width: 0;
+    border-collapse: collapse;
+  }
+  table.sub thead th{
+    font-size: 10px;
+    white-space: nowrap;
+    padding: 10px 12px 6px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  table.sub tbody td{
+    font-size: 13px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  table.sub tbody tr:last-child td{ border-bottom: none; }
+  table.sub tr.seg-main td{
+    color: var(--text-primary);
+    font-weight: 600;
+    border-bottom: none;
+    padding-top: 12px;
+  }
+  table.sub tr.seg-b td{
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-bottom: none;
+  }
+  table.sub tr.seg-b td:first-child{ padding-left: 28px; color: var(--text-muted); }
+  table.sub tr.seg-b + tr.seg-main td{ border-top: 1px solid var(--border); }
+  table.sub tr.seg-main + tr.seg-main td{ border-top: 1px solid var(--border); }
+  table.sub tr.seg-b.seg-subtotal td{
+    color: var(--text-secondary);
+    font-weight: 600;
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+    padding-bottom: 8px;
+  }
+  table.sub tr.seg-total td{
+    color: var(--text-primary);
+    font-weight: 650;
+    border-top: 2px solid var(--border);
+    border-bottom: none;
+    padding-top: 10px;
+  }
+  .expander-sm{ font-size: 13px; font-weight: 600; gap: 8px; }
+  .muted-cell{ color: var(--text-secondary); font-weight: 400; }
+
+  @media (max-width: 720px){
+    .tiles{ grid-template-columns: repeat(2, 1fr); }
+  }
+
+  #gate{
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 50;
+  }
+  .gate-card{
+    width: 100%;
+    max-width: 360px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow-1);
+    padding: 28px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .gate-card h2{ margin: 0; font-size: 22px; }
+  .gate-field{ display: flex; flex-direction: column; gap: 6px; }
+  .gate-field label{
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .gate-field input{
+    font: inherit;
+    font-size: 15px;
+    color: var(--text-primary);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 10px 12px;
+  }
+  .gate-field input:focus-visible{ outline: 2px solid var(--accent); outline-offset: 1px; }
+  .gate-btn{
+    font: inherit;
+    font-weight: 600;
+    font-size: 15px;
+    color: #ffffff;
+    background: var(--accent);
+    border: 0;
+    border-radius: 9px;
+    padding: 11px 14px;
+    cursor: pointer;
+  }
+  :root[data-theme="dark"] .gate-btn{ color: #241118; }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .gate-btn{ color: #241118; }
+  }
+  .gate-btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+  .gate-error{
+    font-size: 13px;
+    color: #d03b3b;
+    min-height: 18px;
+  }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,460..600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+</head>
+<body>
+<div id="gate">
+  <form class="gate-card" id="gate-form" autocomplete="off">
+    <h2>VAMA Platform Paying Users</h2>
+    <div class="gate-field">
+      <label for="gate-user">Username</label>
+      <input type="text" id="gate-user" name="username" autocomplete="username" autofocus>
+    </div>
+    <div class="gate-field">
+      <label for="gate-pass">Password</label>
+      <input type="password" id="gate-pass" name="password" autocomplete="current-password">
+    </div>
+    <button type="submit" class="gate-btn">Sign in</button>
+    <div class="gate-error" id="gate-error" role="alert"></div>
+  </form>
+</div>
+
+<div class="page" hidden>
+
+  <div class="header">
+    <h1>VAMA Platform Paying Users</h1>
+  </div>
+
+  <div class="tiles">
+    <div class="tile">
+      <div class="tile-label">Unique users</div>
+      <div class="tile-value">6,85,797</div>
+    </div>
+    <div class="tile">
+      <div class="tile-label">Transactions</div>
+      <div class="tile-value">18,74,163</div>
+    </div>
+    <div class="tile is-accent">
+      <div class="tile-label">Revenue</div>
+      <div class="tile-value is-long">&#8377;89,60,75,262</div>
+    </div>
+    <div class="tile">
+      <div class="tile-label">AOV</div>
+      <div class="tile-value">&#8377;478.12</div>
+    </div>
+    <div class="tile">
+      <div class="tile-label">ARPU</div>
+      <div class="tile-value">&#8377;1,306.62</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Business unit breakdown</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Business unit</th>
+            <th>Unique users</th>
+            <th>Transactions</th>
+            <th>Revenue</th>
+            <th>AOV</th>
+            <th>ARPU</th>
+            <th>Rev. share</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><button type="button" class="expander" aria-expanded="false" aria-controls="d-puja"><span class="chev" aria-hidden="true"></span>Puja</button></td>
+            <td>1,58,151</td>
+            <td>5,00,937</td>
+            <td>&#8377;43,29,58,375</td>
+            <td>&#8377;864.30</td>
+            <td>&#8377;2,737.63</td>
+            <td class="muted-cell">48.3%</td>
+          </tr>
+          <tr class="detail-row" id="d-puja" hidden>
+            <td colspan="7">
+              <table class="sub">
+                <thead>
+                  <tr><th>Segment</th><th>Users</th><th>Transactions</th><th>Revenue</th><th>AOV</th><th>ARPU</th><th>Rev. share</th></tr>
+                </thead>
+                <tbody>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="puja-1"><span class="chev" aria-hidden="true"></span>Puja only (no cross-sell)</button></td><td>1,14,621</td><td>1,63,684</td><td>&#8377;19,69,89,760</td><td>&#8377;1,203.48</td><td>&#8377;1,718.62</td><td>45.5%</td></tr>
+                  <tr class="seg-b" data-group="puja-1" hidden><td>Tx1</td><td>90,586</td><td>91,492</td><td>&#8377;10,86,48,141</td><td>&#8377;1,187.52</td><td>&#8377;1,199.39</td><td>25.1%</td></tr>
+                  <tr class="seg-b" data-group="puja-1" hidden><td>Tx2</td><td>14,653</td><td>29,306</td><td>&#8377;3,54,22,461</td><td>&#8377;1,208.71</td><td>&#8377;2,417.42</td><td>8.2%</td></tr>
+                  <tr class="seg-b" data-group="puja-1" hidden><td>Tx3</td><td>4,625</td><td>13,875</td><td>&#8377;1,71,84,619</td><td>&#8377;1,238.53</td><td>&#8377;3,715.59</td><td>4.0%</td></tr>
+                  <tr class="seg-b" data-group="puja-1" hidden><td>Tx4</td><td>1,970</td><td>7,880</td><td>&#8377;96,94,291</td><td>&#8377;1,230.24</td><td>&#8377;4,920.96</td><td>2.2%</td></tr>
+                  <tr class="seg-b" data-group="puja-1" hidden><td>Tx5+</td><td>2,787</td><td>21,131</td><td>&#8377;2,60,40,248</td><td>&#8377;1,232.32</td><td>&#8377;9,343.47</td><td>6.0%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="puja-1" hidden><td>Total</td><td>1,14,621</td><td>1,63,684</td><td>&#8377;19,69,89,760</td><td>&#8377;1,203.48</td><td>&#8377;1,718.62</td><td>45.5%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="puja-2"><span class="chev" aria-hidden="true"></span>Cross-sold users, in Puja</button></td><td>43,530</td><td>1,33,525</td><td>&#8377;16,86,71,192</td><td>&#8377;1,263.22</td><td>&#8377;3,874.83</td><td>39.0%</td></tr>
+                  <tr class="seg-b" data-group="puja-2" hidden><td>Tx1</td><td>21,263</td><td>21,263</td><td>&#8377;2,43,68,179</td><td>&#8377;1,146.04</td><td>&#8377;1,146.04</td><td>5.6%</td></tr>
+                  <tr class="seg-b" data-group="puja-2" hidden><td>Tx2</td><td>8,560</td><td>17,120</td><td>&#8377;2,06,44,645</td><td>&#8377;1,205.88</td><td>&#8377;2,411.76</td><td>4.8%</td></tr>
+                  <tr class="seg-b" data-group="puja-2" hidden><td>Tx3</td><td>4,422</td><td>13,266</td><td>&#8377;1,63,43,032</td><td>&#8377;1,231.95</td><td>&#8377;3,695.85</td><td>3.8%</td></tr>
+                  <tr class="seg-b" data-group="puja-2" hidden><td>Tx4</td><td>2,540</td><td>10,160</td><td>&#8377;1,26,33,676</td><td>&#8377;1,243.47</td><td>&#8377;4,973.89</td><td>2.9%</td></tr>
+                  <tr class="seg-b" data-group="puja-2" hidden><td>Tx5+</td><td>6,745</td><td>71,716</td><td>&#8377;9,46,81,660</td><td>&#8377;1,320.23</td><td>&#8377;14,037.31</td><td>21.9%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="puja-2" hidden><td>Total</td><td>43,530</td><td>1,33,525</td><td>&#8377;16,86,71,192</td><td>&#8377;1,263.22</td><td>&#8377;3,874.83</td><td>39.0%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="puja-3"><span class="chev" aria-hidden="true"></span>Puja &rarr; Ecom</button></td><td>12,769</td><td>17,691</td><td>&#8377;1,42,74,633</td><td>&#8377;806.89</td><td>&#8377;1,117.91</td><td>3.3%</td></tr>
+                  <tr class="seg-b" data-group="puja-3" hidden><td>Tx1</td><td>9,656</td><td>9,656</td><td>&#8377;75,95,168</td><td>&#8377;786.57</td><td>&#8377;786.57</td><td>1.8%</td></tr>
+                  <tr class="seg-b" data-group="puja-3" hidden><td>Tx2</td><td>2,108</td><td>4,216</td><td>&#8377;34,29,057</td><td>&#8377;813.34</td><td>&#8377;1,626.69</td><td>0.8%</td></tr>
+                  <tr class="seg-b" data-group="puja-3" hidden><td>Tx3</td><td>593</td><td>1,779</td><td>&#8377;15,04,361</td><td>&#8377;845.62</td><td>&#8377;2,536.87</td><td>0.3%</td></tr>
+                  <tr class="seg-b" data-group="puja-3" hidden><td>Tx4</td><td>226</td><td>904</td><td>&#8377;7,58,456</td><td>&#8377;839.00</td><td>&#8377;3,356.00</td><td>0.2%</td></tr>
+                  <tr class="seg-b" data-group="puja-3" hidden><td>Tx5+</td><td>186</td><td>1,136</td><td>&#8377;9,87,591</td><td>&#8377;869.36</td><td>&#8377;5,309.63</td><td>0.2%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="puja-3" hidden><td>Total</td><td>12,769</td><td>17,691</td><td>&#8377;1,42,74,633</td><td>&#8377;806.89</td><td>&#8377;1,117.91</td><td>3.3%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="puja-4"><span class="chev" aria-hidden="true"></span>Puja &rarr; Astro</button></td><td>8,607</td><td>49,335</td><td>&#8377;1,97,65,594</td><td>&#8377;400.64</td><td>&#8377;2,296.46</td><td>4.6%</td></tr>
+                  <tr class="seg-b" data-group="puja-4" hidden><td>Tx1</td><td>4,383</td><td>4,383</td><td>&#8377;13,31,895</td><td>&#8377;303.88</td><td>&#8377;303.88</td><td>0.3%</td></tr>
+                  <tr class="seg-b" data-group="puja-4" hidden><td>Tx2</td><td>1,614</td><td>3,228</td><td>&#8377;8,76,149</td><td>&#8377;271.42</td><td>&#8377;542.84</td><td>0.2%</td></tr>
+                  <tr class="seg-b" data-group="puja-4" hidden><td>Tx3</td><td>814</td><td>2,442</td><td>&#8377;6,65,969</td><td>&#8377;272.71</td><td>&#8377;818.14</td><td>0.2%</td></tr>
+                  <tr class="seg-b" data-group="puja-4" hidden><td>Tx4</td><td>451</td><td>1,804</td><td>&#8377;4,78,671</td><td>&#8377;265.34</td><td>&#8377;1,061.35</td><td>0.1%</td></tr>
+                  <tr class="seg-b" data-group="puja-4" hidden><td>Tx5+</td><td>1,345</td><td>37,478</td><td>&#8377;1,64,12,910</td><td>&#8377;437.93</td><td>&#8377;12,202.91</td><td>3.8%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="puja-4" hidden><td>Total</td><td>8,607</td><td>49,335</td><td>&#8377;1,97,65,594</td><td>&#8377;400.64</td><td>&#8377;2,296.46</td><td>4.6%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="puja-5"><span class="chev" aria-hidden="true"></span>Puja &rarr; Chadhava</button></td><td>28,486</td><td>82,592</td><td>&#8377;2,70,14,820</td><td>&#8377;327.09</td><td>&#8377;948.35</td><td>6.2%</td></tr>
+                  <tr class="seg-b" data-group="puja-5" hidden><td>Tx1</td><td>15,319</td><td>15,319</td><td>&#8377;57,32,445</td><td>&#8377;374.20</td><td>&#8377;374.20</td><td>1.3%</td></tr>
+                  <tr class="seg-b" data-group="puja-5" hidden><td>Tx2</td><td>5,503</td><td>11,006</td><td>&#8377;39,64,823</td><td>&#8377;360.24</td><td>&#8377;720.48</td><td>0.9%</td></tr>
+                  <tr class="seg-b" data-group="puja-5" hidden><td>Tx3</td><td>2,592</td><td>7,776</td><td>&#8377;26,97,672</td><td>&#8377;346.92</td><td>&#8377;1,040.77</td><td>0.6%</td></tr>
+                  <tr class="seg-b" data-group="puja-5" hidden><td>Tx4</td><td>1,452</td><td>5,808</td><td>&#8377;19,95,671</td><td>&#8377;343.61</td><td>&#8377;1,374.43</td><td>0.5%</td></tr>
+                  <tr class="seg-b" data-group="puja-5" hidden><td>Tx5+</td><td>3,620</td><td>42,683</td><td>&#8377;1,26,24,209</td><td>&#8377;295.77</td><td>&#8377;3,487.35</td><td>2.9%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="puja-5" hidden><td>Total</td><td>28,486</td><td>82,592</td><td>&#8377;2,70,14,820</td><td>&#8377;327.09</td><td>&#8377;948.35</td><td>6.2%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="puja-6"><span class="chev" aria-hidden="true"></span>Puja &rarr; Chadhava+</button></td><td>5,818</td><td>54,107</td><td>&#8377;62,40,878</td><td>&#8377;115.34</td><td>&#8377;1,072.68</td><td>1.4%</td></tr>
+                  <tr class="seg-b" data-group="puja-6" hidden><td>Tx1</td><td>1,087</td><td>1,087</td><td>&#8377;72,338</td><td>&#8377;66.55</td><td>&#8377;66.55</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="puja-6" hidden><td>Tx2</td><td>1,289</td><td>2,578</td><td>&#8377;4,84,925</td><td>&#8377;188.10</td><td>&#8377;376.20</td><td>0.1%</td></tr>
+                  <tr class="seg-b" data-group="puja-6" hidden><td>Tx3</td><td>625</td><td>1,875</td><td>&#8377;3,74,482</td><td>&#8377;199.72</td><td>&#8377;599.17</td><td>0.1%</td></tr>
+                  <tr class="seg-b" data-group="puja-6" hidden><td>Tx4</td><td>370</td><td>1,480</td><td>&#8377;2,25,577</td><td>&#8377;152.42</td><td>&#8377;609.67</td><td>0.1%</td></tr>
+                  <tr class="seg-b" data-group="puja-6" hidden><td>Tx5+</td><td>2,447</td><td>47,087</td><td>&#8377;50,83,556</td><td>&#8377;107.96</td><td>&#8377;2,077.46</td><td>1.2%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="puja-6" hidden><td>Total</td><td>5,818</td><td>54,107</td><td>&#8377;62,40,878</td><td>&#8377;115.34</td><td>&#8377;1,072.68</td><td>1.4%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="puja-7"><span class="chev" aria-hidden="true"></span>Puja &rarr; Kundli</button></td><td>2</td><td>3</td><td>&#8377;1,498</td><td>&#8377;499.33</td><td>&#8377;749.00</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="puja-7" hidden><td>Tx1</td><td>1</td><td>1</td><td>&#8377;499</td><td>&#8377;499.00</td><td>&#8377;499.00</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="puja-7" hidden><td>Tx2</td><td>1</td><td>2</td><td>&#8377;999</td><td>&#8377;499.50</td><td>&#8377;999.00</td><td>0.0%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="puja-7" hidden><td>Total</td><td>2</td><td>3</td><td>&#8377;1,498</td><td>&#8377;499.33</td><td>&#8377;749.00</td><td>0.0%</td></tr>
+                  <tr class="seg-total"><td>Puja grand total</td><td>1,58,151</td><td>5,00,937</td><td>&#8377;43,29,58,375</td><td>&#8377;864.30</td><td>&#8377;2,737.63</td><td>100%</td></tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td><button type="button" class="expander" aria-expanded="false" aria-controls="d-ecom"><span class="chev" aria-hidden="true"></span>Ecom</button></td>
+            <td>1,58,198</td>
+            <td>2,17,211</td>
+            <td>&#8377;16,00,20,183</td>
+            <td>&#8377;736.70</td>
+            <td>&#8377;1,011.52</td>
+            <td class="muted-cell">17.9%</td>
+          </tr>
+          <tr class="detail-row" id="d-ecom" hidden>
+            <td colspan="7">
+              <table class="sub">
+                <thead>
+                  <tr><th>Segment</th><th>Users</th><th>Transactions</th><th>Revenue</th><th>AOV</th><th>ARPU</th><th>Rev. share</th></tr>
+                </thead>
+                <tbody>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="ecom-1"><span class="chev" aria-hidden="true"></span>Ecom only (no cross-sell)</button></td><td>1,49,701</td><td>1,81,578</td><td>&#8377;14,10,60,999</td><td>&#8377;776.86</td><td>&#8377;942.28</td><td>88.2%</td></tr>
+                  <tr class="seg-b" data-group="ecom-1" hidden><td>Tx1</td><td>1,31,717</td><td>1,38,854</td><td>&#8377;10,57,62,769</td><td>&#8377;761.68</td><td>&#8377;802.95</td><td>66.1%</td></tr>
+                  <tr class="seg-b" data-group="ecom-1" hidden><td>Tx2</td><td>13,765</td><td>27,530</td><td>&#8377;2,23,99,584</td><td>&#8377;813.64</td><td>&#8377;1,627.29</td><td>14.0%</td></tr>
+                  <tr class="seg-b" data-group="ecom-1" hidden><td>Tx3</td><td>2,860</td><td>8,580</td><td>&#8377;72,21,845</td><td>&#8377;841.71</td><td>&#8377;2,525.12</td><td>4.5%</td></tr>
+                  <tr class="seg-b" data-group="ecom-1" hidden><td>Tx4</td><td>804</td><td>3,216</td><td>&#8377;27,20,278</td><td>&#8377;845.86</td><td>&#8377;3,383.43</td><td>1.7%</td></tr>
+                  <tr class="seg-b" data-group="ecom-1" hidden><td>Tx5+</td><td>555</td><td>3,398</td><td>&#8377;29,56,523</td><td>&#8377;870.08</td><td>&#8377;5,327.07</td><td>1.8%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="ecom-1" hidden><td>Total</td><td>1,49,701</td><td>1,81,578</td><td>&#8377;14,10,60,999</td><td>&#8377;776.86</td><td>&#8377;942.28</td><td>88.2%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="ecom-2"><span class="chev" aria-hidden="true"></span>Cross-sold users, in Ecom</button></td><td>8,497</td><td>12,358</td><td>&#8377;89,89,029</td><td>&#8377;727.39</td><td>&#8377;1,057.91</td><td>5.6%</td></tr>
+                  <tr class="seg-b" data-group="ecom-2" hidden><td>Tx1</td><td>6,149</td><td>6,149</td><td>&#8377;40,17,516</td><td>&#8377;653.36</td><td>&#8377;653.36</td><td>2.5%</td></tr>
+                  <tr class="seg-b" data-group="ecom-2" hidden><td>Tx2</td><td>1,512</td><td>3,024</td><td>&#8377;23,30,813</td><td>&#8377;770.77</td><td>&#8377;1,541.54</td><td>1.5%</td></tr>
+                  <tr class="seg-b" data-group="ecom-2" hidden><td>Tx3</td><td>494</td><td>1,482</td><td>&#8377;11,87,815</td><td>&#8377;801.49</td><td>&#8377;2,404.48</td><td>0.7%</td></tr>
+                  <tr class="seg-b" data-group="ecom-2" hidden><td>Tx4</td><td>196</td><td>784</td><td>&#8377;6,74,398</td><td>&#8377;860.20</td><td>&#8377;3,440.81</td><td>0.4%</td></tr>
+                  <tr class="seg-b" data-group="ecom-2" hidden><td>Tx5+</td><td>146</td><td>919</td><td>&#8377;7,78,487</td><td>&#8377;847.10</td><td>&#8377;5,332.10</td><td>0.5%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="ecom-2" hidden><td>Total</td><td>8,497</td><td>12,358</td><td>&#8377;89,89,029</td><td>&#8377;727.39</td><td>&#8377;1,057.91</td><td>5.6%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="ecom-3"><span class="chev" aria-hidden="true"></span>Ecom &rarr; Puja</button></td><td>2,446</td><td>4,717</td><td>&#8377;59,47,179</td><td>&#8377;1,260.80</td><td>&#8377;2,431.39</td><td>3.7%</td></tr>
+                  <tr class="seg-b" data-group="ecom-3" hidden><td>Tx1</td><td>1,633</td><td>1,633</td><td>&#8377;20,15,006</td><td>&#8377;1,233.93</td><td>&#8377;1,233.93</td><td>1.3%</td></tr>
+                  <tr class="seg-b" data-group="ecom-3" hidden><td>Tx2</td><td>393</td><td>786</td><td>&#8377;9,86,429</td><td>&#8377;1,255.00</td><td>&#8377;2,510.00</td><td>0.6%</td></tr>
+                  <tr class="seg-b" data-group="ecom-3" hidden><td>Tx3</td><td>179</td><td>537</td><td>&#8377;6,93,595</td><td>&#8377;1,291.61</td><td>&#8377;3,874.83</td><td>0.4%</td></tr>
+                  <tr class="seg-b" data-group="ecom-3" hidden><td>Tx4</td><td>93</td><td>372</td><td>&#8377;4,63,767</td><td>&#8377;1,246.69</td><td>&#8377;4,986.74</td><td>0.3%</td></tr>
+                  <tr class="seg-b" data-group="ecom-3" hidden><td>Tx5+</td><td>148</td><td>1,389</td><td>&#8377;17,88,382</td><td>&#8377;1,287.53</td><td>&#8377;12,083.66</td><td>1.1%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="ecom-3" hidden><td>Total</td><td>2,446</td><td>4,717</td><td>&#8377;59,47,179</td><td>&#8377;1,260.80</td><td>&#8377;2,431.39</td><td>3.7%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="ecom-4"><span class="chev" aria-hidden="true"></span>Ecom &rarr; Astro</button></td><td>783</td><td>1,674</td><td>&#8377;3,20,898</td><td>&#8377;191.70</td><td>&#8377;409.83</td><td>0.2%</td></tr>
+                  <tr class="seg-b" data-group="ecom-4" hidden><td>Tx1</td><td>492</td><td>492</td><td>&#8377;69,632</td><td>&#8377;141.53</td><td>&#8377;141.53</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="ecom-4" hidden><td>Tx2</td><td>147</td><td>294</td><td>&#8377;47,344</td><td>&#8377;161.03</td><td>&#8377;322.07</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="ecom-4" hidden><td>Tx3</td><td>70</td><td>210</td><td>&#8377;43,708</td><td>&#8377;208.13</td><td>&#8377;624.40</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="ecom-4" hidden><td>Tx4</td><td>14</td><td>56</td><td>&#8377;10,220</td><td>&#8377;182.50</td><td>&#8377;730.00</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="ecom-4" hidden><td>Tx5+</td><td>60</td><td>622</td><td>&#8377;1,49,994</td><td>&#8377;241.15</td><td>&#8377;2,499.90</td><td>0.1%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="ecom-4" hidden><td>Total</td><td>783</td><td>1,674</td><td>&#8377;3,20,898</td><td>&#8377;191.70</td><td>&#8377;409.83</td><td>0.2%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="ecom-5"><span class="chev" aria-hidden="true"></span>Ecom &rarr; Chadhava</button></td><td>4,924</td><td>9,645</td><td>&#8377;26,88,290</td><td>&#8377;278.72</td><td>&#8377;545.96</td><td>1.7%</td></tr>
+                  <tr class="seg-b" data-group="ecom-5" hidden><td>Tx1</td><td>3,342</td><td>3,342</td><td>&#8377;9,95,207</td><td>&#8377;297.79</td><td>&#8377;297.79</td><td>0.6%</td></tr>
+                  <tr class="seg-b" data-group="ecom-5" hidden><td>Tx2</td><td>804</td><td>1,608</td><td>&#8377;4,62,784</td><td>&#8377;287.80</td><td>&#8377;575.60</td><td>0.3%</td></tr>
+                  <tr class="seg-b" data-group="ecom-5" hidden><td>Tx3</td><td>306</td><td>918</td><td>&#8377;2,49,459</td><td>&#8377;271.74</td><td>&#8377;815.23</td><td>0.2%</td></tr>
+                  <tr class="seg-b" data-group="ecom-5" hidden><td>Tx4</td><td>168</td><td>672</td><td>&#8377;1,72,381</td><td>&#8377;256.52</td><td>&#8377;1,026.08</td><td>0.1%</td></tr>
+                  <tr class="seg-b" data-group="ecom-5" hidden><td>Tx5+</td><td>304</td><td>3,105</td><td>&#8377;8,08,459</td><td>&#8377;260.37</td><td>&#8377;2,659.40</td><td>0.5%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="ecom-5" hidden><td>Total</td><td>4,924</td><td>9,645</td><td>&#8377;26,88,290</td><td>&#8377;278.72</td><td>&#8377;545.96</td><td>1.7%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="ecom-6"><span class="chev" aria-hidden="true"></span>Ecom &rarr; Chadhava+</button></td><td>2,023</td><td>7,239</td><td>&#8377;10,13,788</td><td>&#8377;140.05</td><td>&#8377;501.13</td><td>0.6%</td></tr>
+                  <tr class="seg-b" data-group="ecom-6" hidden><td>Tx1</td><td>730</td><td>730</td><td>&#8377;19,197</td><td>&#8377;26.30</td><td>&#8377;26.30</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="ecom-6" hidden><td>Tx2</td><td>729</td><td>1,458</td><td>&#8377;3,00,386</td><td>&#8377;206.03</td><td>&#8377;412.05</td><td>0.2%</td></tr>
+                  <tr class="seg-b" data-group="ecom-6" hidden><td>Tx3</td><td>215</td><td>645</td><td>&#8377;1,45,580</td><td>&#8377;225.71</td><td>&#8377;677.12</td><td>0.1%</td></tr>
+                  <tr class="seg-b" data-group="ecom-6" hidden><td>Tx4</td><td>92</td><td>368</td><td>&#8377;68,590</td><td>&#8377;186.39</td><td>&#8377;745.54</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="ecom-6" hidden><td>Tx5+</td><td>257</td><td>4,038</td><td>&#8377;4,80,035</td><td>&#8377;118.88</td><td>&#8377;1,867.84</td><td>0.3%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="ecom-6" hidden><td>Total</td><td>2,023</td><td>7,239</td><td>&#8377;10,13,788</td><td>&#8377;140.05</td><td>&#8377;501.13</td><td>0.6%</td></tr>
+                  <tr class="seg-total"><td>Ecom grand total</td><td>1,58,198</td><td>2,17,211</td><td>&#8377;16,00,20,183</td><td>&#8377;736.70</td><td>&#8377;1,011.52</td><td>100%</td></tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td><button type="button" class="expander" aria-expanded="false" aria-controls="d-astro"><span class="chev" aria-hidden="true"></span>Astro</button></td>
+            <td>95,444</td>
+            <td>4,86,399</td>
+            <td>&#8377;15,10,38,754</td>
+            <td>&#8377;310.52</td>
+            <td>&#8377;1,582.49</td>
+            <td class="muted-cell">16.9%</td>
+          </tr>
+          <tr class="detail-row" id="d-astro" hidden>
+            <td colspan="7">
+              <table class="sub">
+                <thead>
+                  <tr><th>Segment</th><th>Users</th><th>Transactions</th><th>Revenue</th><th>AOV</th><th>ARPU</th><th>Rev. share</th></tr>
+                </thead>
+                <tbody>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="astro-1"><span class="chev" aria-hidden="true"></span>Astro only (no cross-sell)</button></td><td>89,980</td><td>3,05,553</td><td>&#8377;7,00,51,559</td><td>&#8377;229.26</td><td>&#8377;778.52</td><td>46.4%</td></tr>
+                  <tr class="seg-b" data-group="astro-1" hidden><td>Tx1</td><td>56,339</td><td>58,022</td><td>&#8377;88,86,895</td><td>&#8377;153.16</td><td>&#8377;157.74</td><td>5.9%</td></tr>
+                  <tr class="seg-b" data-group="astro-1" hidden><td>Tx2</td><td>17,074</td><td>34,148</td><td>&#8377;52,62,068</td><td>&#8377;154.10</td><td>&#8377;308.19</td><td>3.5%</td></tr>
+                  <tr class="seg-b" data-group="astro-1" hidden><td>Tx3</td><td>6,111</td><td>18,333</td><td>&#8377;31,30,353</td><td>&#8377;170.75</td><td>&#8377;512.25</td><td>2.1%</td></tr>
+                  <tr class="seg-b" data-group="astro-1" hidden><td>Tx4</td><td>2,927</td><td>11,708</td><td>&#8377;20,96,113</td><td>&#8377;179.03</td><td>&#8377;716.13</td><td>1.4%</td></tr>
+                  <tr class="seg-b" data-group="astro-1" hidden><td>Tx5+</td><td>7,529</td><td>1,83,342</td><td>&#8377;5,06,76,130</td><td>&#8377;276.40</td><td>&#8377;6,730.79</td><td>33.6%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="astro-1" hidden><td>Total</td><td>89,980</td><td>3,05,553</td><td>&#8377;7,00,51,559</td><td>&#8377;229.26</td><td>&#8377;778.52</td><td>46.4%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="astro-2"><span class="chev" aria-hidden="true"></span>Cross-sold users, in Astro</button></td><td>5,464</td><td>1,64,194</td><td>&#8377;6,48,43,839</td><td>&#8377;394.92</td><td>&#8377;11,867.47</td><td>42.9%</td></tr>
+                  <tr class="seg-b" data-group="astro-2" hidden><td>Tx1</td><td>2,019</td><td>2,019</td><td>&#8377;4,98,020</td><td>&#8377;246.67</td><td>&#8377;246.67</td><td>0.3%</td></tr>
+                  <tr class="seg-b" data-group="astro-2" hidden><td>Tx2</td><td>936</td><td>1,872</td><td>&#8377;3,87,568</td><td>&#8377;207.03</td><td>&#8377;414.07</td><td>0.3%</td></tr>
+                  <tr class="seg-b" data-group="astro-2" hidden><td>Tx3</td><td>465</td><td>1,395</td><td>&#8377;2,99,881</td><td>&#8377;214.97</td><td>&#8377;644.91</td><td>0.2%</td></tr>
+                  <tr class="seg-b" data-group="astro-2" hidden><td>Tx4</td><td>300</td><td>1,200</td><td>&#8377;2,73,647</td><td>&#8377;228.04</td><td>&#8377;912.16</td><td>0.2%</td></tr>
+                  <tr class="seg-b" data-group="astro-2" hidden><td>Tx5+</td><td>1,744</td><td>1,57,708</td><td>&#8377;6,33,84,723</td><td>&#8377;401.91</td><td>&#8377;36,344.45</td><td>42.0%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="astro-2" hidden><td>Total</td><td>5,464</td><td>1,64,194</td><td>&#8377;6,48,43,839</td><td>&#8377;394.92</td><td>&#8377;11,867.47</td><td>42.9%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="astro-3"><span class="chev" aria-hidden="true"></span>Astro &rarr; Puja</button></td><td>3,425</td><td>7,056</td><td>&#8377;1,39,81,145</td><td>&#8377;1,981.45</td><td>&#8377;4,082.09</td><td>9.3%</td></tr>
+                  <tr class="seg-b" data-group="astro-3" hidden><td>Tx1</td><td>2,294</td><td>2,294</td><td>&#8377;39,93,383</td><td>&#8377;1,740.79</td><td>&#8377;1,740.79</td><td>2.6%</td></tr>
+                  <tr class="seg-b" data-group="astro-3" hidden><td>Tx2</td><td>571</td><td>1,142</td><td>&#8377;18,72,635</td><td>&#8377;1,639.79</td><td>&#8377;3,279.57</td><td>1.2%</td></tr>
+                  <tr class="seg-b" data-group="astro-3" hidden><td>Tx3</td><td>231</td><td>693</td><td>&#8377;14,84,075</td><td>&#8377;2,141.52</td><td>&#8377;6,424.57</td><td>1.0%</td></tr>
+                  <tr class="seg-b" data-group="astro-3" hidden><td>Tx4</td><td>117</td><td>468</td><td>&#8377;10,56,761</td><td>&#8377;2,258.04</td><td>&#8377;9,032.15</td><td>0.7%</td></tr>
+                  <tr class="seg-b" data-group="astro-3" hidden><td>Tx5+</td><td>212</td><td>2,459</td><td>&#8377;55,74,291</td><td>&#8377;2,266.89</td><td>&#8377;26,293.83</td><td>3.7%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="astro-3" hidden><td>Total</td><td>3,425</td><td>7,056</td><td>&#8377;1,39,81,145</td><td>&#8377;1,981.45</td><td>&#8377;4,082.09</td><td>9.3%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="astro-4"><span class="chev" aria-hidden="true"></span>Astro &rarr; Ecom</button></td><td>733</td><td>923</td><td>&#8377;7,03,354</td><td>&#8377;762.03</td><td>&#8377;959.56</td><td>0.5%</td></tr>
+                  <tr class="seg-b" data-group="astro-4" hidden><td>Tx1</td><td>606</td><td>606</td><td>&#8377;4,39,773</td><td>&#8377;725.70</td><td>&#8377;725.70</td><td>0.3%</td></tr>
+                  <tr class="seg-b" data-group="astro-4" hidden><td>Tx2</td><td>88</td><td>176</td><td>&#8377;1,40,156</td><td>&#8377;796.34</td><td>&#8377;1,592.68</td><td>0.1%</td></tr>
+                  <tr class="seg-b" data-group="astro-4" hidden><td>Tx3</td><td>24</td><td>72</td><td>&#8377;62,833</td><td>&#8377;872.68</td><td>&#8377;2,618.04</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="astro-4" hidden><td>Tx4</td><td>9</td><td>36</td><td>&#8377;34,458</td><td>&#8377;957.17</td><td>&#8377;3,828.67</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="astro-4" hidden><td>Tx5+</td><td>6</td><td>33</td><td>&#8377;26,134</td><td>&#8377;791.94</td><td>&#8377;4,355.67</td><td>0.0%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="astro-4" hidden><td>Total</td><td>733</td><td>923</td><td>&#8377;7,03,354</td><td>&#8377;762.03</td><td>&#8377;959.56</td><td>0.5%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="astro-5"><span class="chev" aria-hidden="true"></span>Astro &rarr; Chadhava</button></td><td>1,968</td><td>5,552</td><td>&#8377;11,42,846</td><td>&#8377;205.84</td><td>&#8377;580.71</td><td>0.8%</td></tr>
+                  <tr class="seg-b" data-group="astro-5" hidden><td>Tx1</td><td>1,240</td><td>1,240</td><td>&#8377;3,02,764</td><td>&#8377;244.16</td><td>&#8377;244.16</td><td>0.2%</td></tr>
+                  <tr class="seg-b" data-group="astro-5" hidden><td>Tx2</td><td>339</td><td>678</td><td>&#8377;1,62,113</td><td>&#8377;239.10</td><td>&#8377;478.21</td><td>0.1%</td></tr>
+                  <tr class="seg-b" data-group="astro-5" hidden><td>Tx3</td><td>129</td><td>387</td><td>&#8377;75,278</td><td>&#8377;194.52</td><td>&#8377;583.55</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="astro-5" hidden><td>Tx4</td><td>75</td><td>300</td><td>&#8377;61,684</td><td>&#8377;205.61</td><td>&#8377;822.45</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="astro-5" hidden><td>Tx5+</td><td>185</td><td>2,947</td><td>&#8377;5,41,007</td><td>&#8377;183.58</td><td>&#8377;2,924.36</td><td>0.4%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="astro-5" hidden><td>Total</td><td>1,968</td><td>5,552</td><td>&#8377;11,42,846</td><td>&#8377;205.84</td><td>&#8377;580.71</td><td>0.8%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="astro-6"><span class="chev" aria-hidden="true"></span>Astro &rarr; Chadhava+</button></td><td>479</td><td>3,116</td><td>&#8377;3,14,014</td><td>&#8377;100.77</td><td>&#8377;655.56</td><td>0.2%</td></tr>
+                  <tr class="seg-b" data-group="astro-6" hidden><td>Tx1</td><td>189</td><td>189</td><td>&#8377;7,728</td><td>&#8377;40.89</td><td>&#8377;40.89</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="astro-6" hidden><td>Tx2</td><td>99</td><td>198</td><td>&#8377;34,591</td><td>&#8377;174.70</td><td>&#8377;349.40</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="astro-6" hidden><td>Tx3</td><td>39</td><td>117</td><td>&#8377;20,994</td><td>&#8377;179.44</td><td>&#8377;538.31</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="astro-6" hidden><td>Tx4</td><td>24</td><td>96</td><td>&#8377;12,181</td><td>&#8377;126.89</td><td>&#8377;507.54</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="astro-6" hidden><td>Tx5+</td><td>128</td><td>2,516</td><td>&#8377;2,38,520</td><td>&#8377;94.80</td><td>&#8377;1,863.44</td><td>0.2%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="astro-6" hidden><td>Total</td><td>479</td><td>3,116</td><td>&#8377;3,14,014</td><td>&#8377;100.77</td><td>&#8377;655.56</td><td>0.2%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="astro-7"><span class="chev" aria-hidden="true"></span>Astro &rarr; Kundli</button></td><td>3</td><td>5</td><td>&#8377;1,997</td><td>&#8377;399.40</td><td>&#8377;665.67</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="astro-7" hidden><td>Tx1</td><td>1</td><td>1</td><td>&#8377;1</td><td>&#8377;1.00</td><td>&#8377;1.00</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="astro-7" hidden><td>Tx2</td><td>2</td><td>4</td><td>&#8377;1,996</td><td>&#8377;499.00</td><td>&#8377;998.00</td><td>0.0%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="astro-7" hidden><td>Total</td><td>3</td><td>5</td><td>&#8377;1,997</td><td>&#8377;399.40</td><td>&#8377;665.67</td><td>0.0%</td></tr>
+                  <tr class="seg-total"><td>Astro grand total</td><td>95,444</td><td>4,86,399</td><td>&#8377;15,10,38,754</td><td>&#8377;310.52</td><td>&#8377;1,582.49</td><td>100%</td></tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td><button type="button" class="expander" aria-expanded="false" aria-controls="d-chadhava"><span class="chev" aria-hidden="true"></span>Chadhava</button></td>
+            <td>1,94,307</td>
+            <td>4,45,923</td>
+            <td>&#8377;11,40,93,881</td>
+            <td>&#8377;255.86</td>
+            <td>&#8377;587.18</td>
+            <td class="muted-cell">12.7%</td>
+          </tr>
+          <tr class="detail-row" id="d-chadhava" hidden>
+            <td colspan="7">
+              <table class="sub">
+                <thead>
+                  <tr><th>Segment</th><th>Users</th><th>Transactions</th><th>Revenue</th><th>AOV</th><th>ARPU</th><th>Rev. share</th></tr>
+                </thead>
+                <tbody>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="chadhava-1"><span class="chev" aria-hidden="true"></span>Chadhava only (no cross-sell)</button></td><td>1,64,362</td><td>2,44,197</td><td>&#8377;4,85,93,603</td><td>&#8377;198.99</td><td>&#8377;295.65</td><td>42.6%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-1" hidden><td>Tx1</td><td>1,27,343</td><td>1,27,357</td><td>&#8377;2,78,38,736</td><td>&#8377;218.59</td><td>&#8377;218.61</td><td>24.4%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-1" hidden><td>Tx2</td><td>22,022</td><td>44,044</td><td>&#8377;88,47,556</td><td>&#8377;200.88</td><td>&#8377;401.76</td><td>7.8%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-1" hidden><td>Tx3</td><td>7,244</td><td>21,732</td><td>&#8377;40,82,785</td><td>&#8377;187.87</td><td>&#8377;563.61</td><td>3.6%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-1" hidden><td>Tx4</td><td>3,148</td><td>12,592</td><td>&#8377;22,23,311</td><td>&#8377;176.57</td><td>&#8377;706.26</td><td>1.9%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-1" hidden><td>Tx5+</td><td>4,605</td><td>38,472</td><td>&#8377;56,01,215</td><td>&#8377;145.59</td><td>&#8377;1,216.33</td><td>4.9%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="chadhava-1" hidden><td>Total</td><td>1,64,362</td><td>2,44,197</td><td>&#8377;4,85,93,603</td><td>&#8377;198.99</td><td>&#8377;295.65</td><td>42.6%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="chadhava-2"><span class="chev" aria-hidden="true"></span>Cross-sold users, in Chadhava</button></td><td>29,945</td><td>92,848</td><td>&#8377;2,16,24,336</td><td>&#8377;232.90</td><td>&#8377;722.14</td><td>19.0%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-2" hidden><td>Tx1</td><td>14,378</td><td>14,378</td><td>&#8377;40,17,078</td><td>&#8377;279.39</td><td>&#8377;279.39</td><td>3.5%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-2" hidden><td>Tx2</td><td>6,217</td><td>12,434</td><td>&#8377;32,97,331</td><td>&#8377;265.19</td><td>&#8377;530.37</td><td>2.9%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-2" hidden><td>Tx3</td><td>3,059</td><td>9,177</td><td>&#8377;22,81,552</td><td>&#8377;248.62</td><td>&#8377;745.85</td><td>2.0%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-2" hidden><td>Tx4</td><td>1,783</td><td>7,132</td><td>&#8377;17,60,442</td><td>&#8377;246.84</td><td>&#8377;987.35</td><td>1.5%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-2" hidden><td>Tx5+</td><td>4,508</td><td>49,727</td><td>&#8377;1,02,67,933</td><td>&#8377;206.49</td><td>&#8377;2,277.71</td><td>9.0%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="chadhava-2" hidden><td>Total</td><td>29,945</td><td>92,848</td><td>&#8377;2,16,24,336</td><td>&#8377;232.90</td><td>&#8377;722.14</td><td>19.0%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="chadhava-3"><span class="chev" aria-hidden="true"></span>Chadhava &rarr; Puja</button></td><td>11,406</td><td>21,854</td><td>&#8377;2,50,87,147</td><td>&#8377;1,147.94</td><td>&#8377;2,199.47</td><td>22.0%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-3" hidden><td>Tx1</td><td>7,505</td><td>7,505</td><td>&#8377;81,81,605</td><td>&#8377;1,090.15</td><td>&#8377;1,090.15</td><td>7.2%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-3" hidden><td>Tx2</td><td>1,915</td><td>3,830</td><td>&#8377;44,46,228</td><td>&#8377;1,160.90</td><td>&#8377;2,321.79</td><td>3.9%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-3" hidden><td>Tx3</td><td>783</td><td>2,349</td><td>&#8377;27,83,216</td><td>&#8377;1,184.85</td><td>&#8377;3,554.55</td><td>2.4%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-3" hidden><td>Tx4</td><td>436</td><td>1,744</td><td>&#8377;20,63,630</td><td>&#8377;1,183.27</td><td>&#8377;4,733.10</td><td>1.8%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-3" hidden><td>Tx5+</td><td>767</td><td>6,426</td><td>&#8377;76,12,468</td><td>&#8377;1,184.64</td><td>&#8377;9,924.99</td><td>6.7%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="chadhava-3" hidden><td>Total</td><td>11,406</td><td>21,854</td><td>&#8377;2,50,87,147</td><td>&#8377;1,147.94</td><td>&#8377;2,199.47</td><td>22.0%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="chadhava-4"><span class="chev" aria-hidden="true"></span>Chadhava &rarr; Ecom</button></td><td>8,295</td><td>10,553</td><td>&#8377;77,95,818</td><td>&#8377;738.73</td><td>&#8377;939.82</td><td>6.8%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-4" hidden><td>Tx1</td><td>6,741</td><td>6,741</td><td>&#8377;48,15,757</td><td>&#8377;714.40</td><td>&#8377;714.40</td><td>4.2%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-4" hidden><td>Tx2</td><td>1,131</td><td>2,262</td><td>&#8377;17,38,163</td><td>&#8377;768.42</td><td>&#8377;1,536.84</td><td>1.5%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-4" hidden><td>Tx3</td><td>279</td><td>837</td><td>&#8377;6,40,193</td><td>&#8377;764.87</td><td>&#8377;2,294.60</td><td>0.6%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-4" hidden><td>Tx4</td><td>90</td><td>360</td><td>&#8377;3,07,078</td><td>&#8377;852.99</td><td>&#8377;3,411.98</td><td>0.3%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-4" hidden><td>Tx5+</td><td>54</td><td>353</td><td>&#8377;2,94,627</td><td>&#8377;834.64</td><td>&#8377;5,456.06</td><td>0.3%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="chadhava-4" hidden><td>Total</td><td>8,295</td><td>10,553</td><td>&#8377;77,95,818</td><td>&#8377;738.73</td><td>&#8377;939.82</td><td>6.8%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="chadhava-5"><span class="chev" aria-hidden="true"></span>Chadhava &rarr; Astro</button></td><td>4,291</td><td>14,098</td><td>&#8377;33,79,318</td><td>&#8377;239.70</td><td>&#8377;787.54</td><td>3.0%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-5" hidden><td>Tx1</td><td>2,553</td><td>2,553</td><td>&#8377;3,67,807</td><td>&#8377;144.07</td><td>&#8377;144.07</td><td>0.3%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-5" hidden><td>Tx2</td><td>823</td><td>1,646</td><td>&#8377;2,71,471</td><td>&#8377;164.93</td><td>&#8377;329.86</td><td>0.2%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-5" hidden><td>Tx3</td><td>326</td><td>978</td><td>&#8377;1,82,142</td><td>&#8377;186.24</td><td>&#8377;558.72</td><td>0.2%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-5" hidden><td>Tx4</td><td>164</td><td>656</td><td>&#8377;1,33,203</td><td>&#8377;203.05</td><td>&#8377;812.21</td><td>0.1%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-5" hidden><td>Tx5+</td><td>425</td><td>8,265</td><td>&#8377;24,24,695</td><td>&#8377;293.37</td><td>&#8377;5,705.16</td><td>2.1%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="chadhava-5" hidden><td>Total</td><td>4,291</td><td>14,098</td><td>&#8377;33,79,318</td><td>&#8377;239.70</td><td>&#8377;787.54</td><td>3.0%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="chadhava-6"><span class="chev" aria-hidden="true"></span>Chadhava &rarr; Chadhava+</button></td><td>11,351</td><td>62,372</td><td>&#8377;76,13,160</td><td>&#8377;122.06</td><td>&#8377;670.70</td><td>6.7%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-6" hidden><td>Tx1</td><td>3,269</td><td>3,269</td><td>&#8377;1,45,601</td><td>&#8377;44.54</td><td>&#8377;44.54</td><td>0.1%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-6" hidden><td>Tx2</td><td>3,024</td><td>6,048</td><td>&#8377;11,15,665</td><td>&#8377;184.47</td><td>&#8377;368.94</td><td>1.0%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-6" hidden><td>Tx3</td><td>1,150</td><td>3,450</td><td>&#8377;6,33,783</td><td>&#8377;183.71</td><td>&#8377;551.12</td><td>0.6%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-6" hidden><td>Tx4</td><td>701</td><td>2,804</td><td>&#8377;4,37,140</td><td>&#8377;155.90</td><td>&#8377;623.59</td><td>0.4%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-6" hidden><td>Tx5+</td><td>3,207</td><td>46,801</td><td>&#8377;52,80,971</td><td>&#8377;112.84</td><td>&#8377;1,646.70</td><td>4.6%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="chadhava-6" hidden><td>Total</td><td>11,351</td><td>62,372</td><td>&#8377;76,13,160</td><td>&#8377;122.06</td><td>&#8377;670.70</td><td>6.7%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="chadhava-7"><span class="chev" aria-hidden="true"></span>Chadhava &rarr; Kundli</button></td><td>1</td><td>1</td><td>&#8377;499</td><td>&#8377;499.00</td><td>&#8377;499.00</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="chadhava-7" hidden><td>Tx1</td><td>1</td><td>1</td><td>&#8377;499</td><td>&#8377;499.00</td><td>&#8377;499.00</td><td>0.0%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="chadhava-7" hidden><td>Total</td><td>1</td><td>1</td><td>&#8377;499</td><td>&#8377;499.00</td><td>&#8377;499.00</td><td>0.0%</td></tr>
+                  <tr class="seg-total"><td>Chadhava grand total</td><td>1,94,307</td><td>4,45,923</td><td>&#8377;11,40,93,881</td><td>&#8377;255.86</td><td>&#8377;587.18</td><td>100%</td></tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td><button type="button" class="expander" aria-expanded="false" aria-controls="d-chadhavaplus"><span class="chev" aria-hidden="true"></span>Chadhava+</button></td>
+            <td>79,693</td>
+            <td>2,23,689</td>
+            <td>&#8377;3,79,62,073</td>
+            <td>&#8377;169.71</td>
+            <td>&#8377;476.35</td>
+            <td class="muted-cell">4.2%</td>
+          </tr>
+          <tr class="detail-row" id="d-chadhavaplus" hidden>
+            <td colspan="7">
+              <table class="sub">
+                <thead>
+                  <tr><th>Segment</th><th>Users</th><th>Transactions</th><th>Revenue</th><th>AOV</th><th>ARPU</th><th>Rev. share</th></tr>
+                </thead>
+                <tbody>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="chadhavaplus-1"><span class="chev" aria-hidden="true"></span>Chadhava+ only (no cross-sell)</button></td><td>72,899</td><td>1,70,438</td><td>&#8377;2,64,16,256</td><td>&#8377;154.99</td><td>&#8377;362.37</td><td>69.6%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-1" hidden><td>Tx1</td><td>33,374</td><td>34,704</td><td>&#8377;7,29,503</td><td>&#8377;21.02</td><td>&#8377;21.86</td><td>1.9%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-1" hidden><td>Tx2</td><td>23,351</td><td>46,702</td><td>&#8377;94,84,608</td><td>&#8377;203.09</td><td>&#8377;406.18</td><td>25.0%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-1" hidden><td>Tx3</td><td>7,926</td><td>23,778</td><td>&#8377;60,59,417</td><td>&#8377;254.83</td><td>&#8377;764.50</td><td>16.0%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-1" hidden><td>Tx4</td><td>2,448</td><td>9,792</td><td>&#8377;20,12,724</td><td>&#8377;205.55</td><td>&#8377;822.19</td><td>5.3%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-1" hidden><td>Tx5+</td><td>5,800</td><td>55,462</td><td>&#8377;81,30,004</td><td>&#8377;146.59</td><td>&#8377;1,401.72</td><td>21.4%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="chadhavaplus-1" hidden><td>Total</td><td>72,899</td><td>1,70,438</td><td>&#8377;2,64,16,256</td><td>&#8377;154.99</td><td>&#8377;362.37</td><td>69.6%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="chadhavaplus-2"><span class="chev" aria-hidden="true"></span>Cross-sold users, in Chadhava+</button></td><td>6,794</td><td>38,965</td><td>&#8377;57,07,727</td><td>&#8377;146.48</td><td>&#8377;840.11</td><td>15.0%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-2" hidden><td>Tx1</td><td>1,623</td><td>1,623</td><td>&#8377;99,338</td><td>&#8377;61.21</td><td>&#8377;61.21</td><td>0.3%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-2" hidden><td>Tx2</td><td>1,496</td><td>2,992</td><td>&#8377;5,31,720</td><td>&#8377;177.71</td><td>&#8377;355.43</td><td>1.4%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-2" hidden><td>Tx3</td><td>834</td><td>2,502</td><td>&#8377;5,16,064</td><td>&#8377;206.26</td><td>&#8377;618.78</td><td>1.4%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-2" hidden><td>Tx4</td><td>474</td><td>1,896</td><td>&#8377;3,28,316</td><td>&#8377;173.16</td><td>&#8377;692.65</td><td>0.9%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-2" hidden><td>Tx5+</td><td>2,367</td><td>29,952</td><td>&#8377;42,32,289</td><td>&#8377;141.30</td><td>&#8377;1,788.04</td><td>11.1%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="chadhavaplus-2" hidden><td>Total</td><td>6,794</td><td>38,965</td><td>&#8377;57,07,727</td><td>&#8377;146.48</td><td>&#8377;840.11</td><td>15.0%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="chadhavaplus-3"><span class="chev" aria-hidden="true"></span>Chadhava+ &rarr; Puja</button></td><td>932</td><td>1,629</td><td>&#8377;17,64,094</td><td>&#8377;1,082.93</td><td>&#8377;1,892.80</td><td>4.6%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-3" hidden><td>Tx1</td><td>631</td><td>631</td><td>&#8377;6,68,445</td><td>&#8377;1,059.34</td><td>&#8377;1,059.34</td><td>1.8%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-3" hidden><td>Tx2</td><td>162</td><td>324</td><td>&#8377;3,48,824</td><td>&#8377;1,076.62</td><td>&#8377;2,153.23</td><td>0.9%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-3" hidden><td>Tx3</td><td>59</td><td>177</td><td>&#8377;1,96,100</td><td>&#8377;1,107.91</td><td>&#8377;3,323.73</td><td>0.5%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-3" hidden><td>Tx4</td><td>32</td><td>128</td><td>&#8377;1,45,717</td><td>&#8377;1,138.41</td><td>&#8377;4,553.66</td><td>0.4%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-3" hidden><td>Tx5+</td><td>48</td><td>369</td><td>&#8377;4,05,008</td><td>&#8377;1,097.58</td><td>&#8377;8,437.67</td><td>1.1%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="chadhavaplus-3" hidden><td>Total</td><td>932</td><td>1,629</td><td>&#8377;17,64,094</td><td>&#8377;1,082.93</td><td>&#8377;1,892.80</td><td>4.6%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="chadhavaplus-4"><span class="chev" aria-hidden="true"></span>Chadhava+ &rarr; Ecom</button></td><td>2,079</td><td>2,603</td><td>&#8377;20,14,849</td><td>&#8377;774.05</td><td>&#8377;969.14</td><td>5.3%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-4" hidden><td>Tx1</td><td>1,706</td><td>1,706</td><td>&#8377;13,01,784</td><td>&#8377;763.06</td><td>&#8377;763.06</td><td>3.4%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-4" hidden><td>Tx2</td><td>280</td><td>560</td><td>&#8377;4,47,477</td><td>&#8377;799.07</td><td>&#8377;1,598.13</td><td>1.2%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-4" hidden><td>Tx3</td><td>62</td><td>186</td><td>&#8377;1,48,897</td><td>&#8377;800.52</td><td>&#8377;2,401.56</td><td>0.4%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-4" hidden><td>Tx4</td><td>15</td><td>60</td><td>&#8377;46,049</td><td>&#8377;767.48</td><td>&#8377;3,069.93</td><td>0.1%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-4" hidden><td>Tx5+</td><td>16</td><td>91</td><td>&#8377;70,642</td><td>&#8377;776.29</td><td>&#8377;4,415.12</td><td>0.2%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="chadhavaplus-4" hidden><td>Total</td><td>2,079</td><td>2,603</td><td>&#8377;20,14,849</td><td>&#8377;774.05</td><td>&#8377;969.14</td><td>5.3%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="chadhavaplus-5"><span class="chev" aria-hidden="true"></span>Chadhava+ &rarr; Astro</button></td><td>639</td><td>1,834</td><td>&#8377;3,01,158</td><td>&#8377;164.21</td><td>&#8377;471.30</td><td>0.8%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-5" hidden><td>Tx1</td><td>454</td><td>454</td><td>&#8377;59,672</td><td>&#8377;131.44</td><td>&#8377;131.44</td><td>0.2%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-5" hidden><td>Tx2</td><td>97</td><td>194</td><td>&#8377;30,789</td><td>&#8377;158.71</td><td>&#8377;317.41</td><td>0.1%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-5" hidden><td>Tx3</td><td>37</td><td>111</td><td>&#8377;20,367</td><td>&#8377;183.49</td><td>&#8377;550.46</td><td>0.1%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-5" hidden><td>Tx4</td><td>19</td><td>76</td><td>&#8377;13,407</td><td>&#8377;176.41</td><td>&#8377;705.63</td><td>0.0%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-5" hidden><td>Tx5+</td><td>32</td><td>999</td><td>&#8377;1,76,923</td><td>&#8377;177.10</td><td>&#8377;5,528.84</td><td>0.5%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="chadhavaplus-5" hidden><td>Total</td><td>639</td><td>1,834</td><td>&#8377;3,01,158</td><td>&#8377;164.21</td><td>&#8377;471.30</td><td>0.8%</td></tr>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="chadhavaplus-6"><span class="chev" aria-hidden="true"></span>Chadhava+ &rarr; Chadhava</button></td><td>4,458</td><td>8,220</td><td>&#8377;17,57,989</td><td>&#8377;213.87</td><td>&#8377;394.34</td><td>4.6%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-6" hidden><td>Tx1</td><td>2,946</td><td>2,946</td><td>&#8377;6,29,621</td><td>&#8377;213.72</td><td>&#8377;213.72</td><td>1.7%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-6" hidden><td>Tx2</td><td>791</td><td>1,582</td><td>&#8377;3,42,211</td><td>&#8377;216.32</td><td>&#8377;432.63</td><td>0.9%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-6" hidden><td>Tx3</td><td>292</td><td>876</td><td>&#8377;2,03,891</td><td>&#8377;232.75</td><td>&#8377;698.26</td><td>0.5%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-6" hidden><td>Tx4</td><td>155</td><td>620</td><td>&#8377;1,23,297</td><td>&#8377;198.87</td><td>&#8377;795.46</td><td>0.3%</td></tr>
+                  <tr class="seg-b" data-group="chadhavaplus-6" hidden><td>Tx5+</td><td>274</td><td>2,196</td><td>&#8377;4,58,969</td><td>&#8377;209.00</td><td>&#8377;1,675.07</td><td>1.2%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="chadhavaplus-6" hidden><td>Total</td><td>4,458</td><td>8,220</td><td>&#8377;17,57,989</td><td>&#8377;213.87</td><td>&#8377;394.34</td><td>4.6%</td></tr>
+                  <tr class="seg-total"><td>Chadhava+ grand total</td><td>79,693</td><td>2,23,689</td><td>&#8377;3,79,62,073</td><td>&#8377;169.71</td><td>&#8377;476.35</td><td>100%</td></tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td><button type="button" class="expander" aria-expanded="false" aria-controls="d-kundli"><span class="chev" aria-hidden="true"></span>Kundli</button></td>
+            <td>4</td>
+            <td>4</td>
+            <td>&#8377;1,996</td>
+            <td>&#8377;499.00</td>
+            <td>&#8377;499.00</td>
+            <td class="muted-cell">&lt;0.1%</td>
+          </tr>
+          <tr class="detail-row" id="d-kundli" hidden>
+            <td colspan="7">
+              <table class="sub">
+                <thead>
+                  <tr><th>Segment</th><th>Users</th><th>Transactions</th><th>Revenue</th><th>AOV</th><th>ARPU</th><th>Rev. share</th></tr>
+                </thead>
+                <tbody>
+                  <tr class="seg-main"><td><button type="button" class="expander expander-sm" aria-expanded="false" data-group="kundli-1"><span class="chev" aria-hidden="true"></span>Kundli only (no cross-sell)</button></td><td>4</td><td>4</td><td>&#8377;1,996</td><td>&#8377;499.00</td><td>&#8377;499.00</td><td>100.0%</td></tr>
+                  <tr class="seg-b" data-group="kundli-1" hidden><td>Tx1</td><td>4</td><td>4</td><td>&#8377;1,996</td><td>&#8377;499.00</td><td>&#8377;499.00</td><td>100.0%</td></tr>
+                  <tr class="seg-b seg-subtotal" data-group="kundli-1" hidden><td>Total</td><td>4</td><td>4</td><td>&#8377;1,996</td><td>&#8377;499.00</td><td>&#8377;499.00</td><td>100.0%</td></tr>
+                  <tr class="seg-total"><td>Kundli grand total</td><td>4</td><td>4</td><td>&#8377;1,996</td><td>&#8377;499.00</td><td>&#8377;499.00</td><td>100%</td></tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr class="total-row">
+            <td><button type="button" class="expander" aria-expanded="false" aria-controls="d-platform"><span class="chev" aria-hidden="true"></span>Platform total</button></td>
+            <td>6,85,797</td>
+            <td>18,74,163</td>
+            <td>&#8377;89,60,75,262</td>
+            <td>&#8377;478.12</td>
+            <td>&#8377;1,306.62</td>
+            <td class="muted-cell">100%</td>
+          </tr>
+          <tr class="detail-row" id="d-platform" hidden>
+            <td colspan="7">
+              <table class="sub">
+                <thead>
+                  <tr><th>Platform transactions per user</th><th>Users</th><th>Transactions</th><th>Revenue</th><th>AOV</th><th>ARPU</th><th>Rev. share</th></tr>
+                </thead>
+                <tbody>
+                  <tr class="seg-main"><td>Tx1</td><td>4,39,363</td><td>4,50,433</td><td>&#8377;25,18,68,040</td><td>&#8377;559.17</td><td>&#8377;573.26</td><td>28.1%</td></tr>
+                  <tr class="seg-main"><td>Tx2</td><td>1,17,414</td><td>2,34,828</td><td>&#8377;11,44,16,304</td><td>&#8377;487.23</td><td>&#8377;974.47</td><td>12.8%</td></tr>
+                  <tr class="seg-main"><td>Tx3</td><td>47,091</td><td>1,41,273</td><td>&#8377;7,02,11,258</td><td>&#8377;496.99</td><td>&#8377;1,490.97</td><td>7.8%</td></tr>
+                  <tr class="seg-main"><td>Tx4</td><td>22,866</td><td>91,464</td><td>&#8377;4,59,39,388</td><td>&#8377;502.27</td><td>&#8377;2,009.07</td><td>5.1%</td></tr>
+                  <tr class="seg-main"><td>Tx5+</td><td>59,063</td><td>9,56,165</td><td>&#8377;41,36,40,272</td><td>&#8377;432.60</td><td>&#8377;7,003.37</td><td>46.2%</td></tr>
+                  <tr class="seg-total"><td>Platform grand total</td><td>6,85,797</td><td>18,74,163</td><td>&#8377;89,60,75,262</td><td>&#8377;478.12</td><td>&#8377;1,306.62</td><td>100%</td></tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  (function () {
+    var USER = 'Vama', PASS = 'Vama123@';
+    var gate = document.getElementById('gate');
+    var page = document.querySelector('.page');
+    var form = document.getElementById('gate-form');
+    var err = document.getElementById('gate-error');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var u = document.getElementById('gate-user').value.trim();
+      var p = document.getElementById('gate-pass').value;
+      if (u === USER && p === PASS) {
+        gate.remove();
+        page.hidden = false;
+      } else {
+        err.textContent = 'Galat username ya password.';
+        document.getElementById('gate-pass').value = '';
+        document.getElementById('gate-pass').focus();
+      }
+    });
+  })();
+</script>
+<script>
+  document.querySelectorAll('.expander[aria-controls]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var target = document.getElementById(btn.getAttribute('aria-controls'));
+      if (!target) return;
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      target.hidden = open;
+    });
+  });
+  document.querySelectorAll('.expander[data-group]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      document.querySelectorAll('tr.seg-b[data-group="' + btn.getAttribute('data-group') + '"]').forEach(function (r) {
+        r.hidden = open;
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
